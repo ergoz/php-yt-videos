@@ -5,6 +5,7 @@ require_once('../vendor/autoload.php');
 $service = \Dukt\Videos\Common\ServiceFactory::create('YouTube');
 
 $url = "http://www.youtube.com/watch?v=0ZUvQ5h-TCA";
+
 $videoId = $service->getVideoId($url);
 
 if($videoId) {
