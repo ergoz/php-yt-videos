@@ -4,6 +4,33 @@
 
 [![Build Status](https://travis-ci.org/dukt/videos.png?branch=master)](https://travis-ci.org/adrianmacneil/omnipay)
 
+## Creating a service
+
+```
+$service = \Dukt\Videos\Common\ServiceFactory::create('YouTube', $provider);
+
+$url = "http://www.youtube.com/watch?v=0ZUvQ5h-TCA";
+
+$videoId = $service->getVideoId($url);
+
+if($videoId) {
+    ?>
+    <h1>Videos Infos</h1>
+    <ul>
+        <li>url : <?php echo $url?></li>
+        <li>videoId : <?php echo $videoId?></li>
+    </ul>
+    <?php
+}
+else
+{
+    ?>
+    <h1>Error</h1>
+    <p>Invalid Video URL</p>
+    <?php
+}
+```
+
 ## Creating an OAuth Provider
 
 ```
