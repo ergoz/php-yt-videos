@@ -4,7 +4,32 @@
 
 [![Build Status](https://travis-ci.org/dukt/videos.png?branch=master)](https://travis-ci.org/adrianmacneil/omnipay)
 
-## Creating a service
+## Installation
+
+Omnipay is installed via [Composer](http://getcomposer.org/). To install, simply add it
+to your `composer.json` file:
+
+```json
+{
+    "require": {
+        "dukt/videos": "0.1.*"
+    }
+}
+```
+
+And run composer to update your dependencies:
+
+    $ curl -s http://getcomposer.org/installer | php
+    $ php composer.phar update
+
+## Video Services
+
+The following video services are implemented :
+
+* Vimeo
+* YouTube
+
+### Creating a service
 
 ```
 $service = \Dukt\Videos\Common\ServiceFactory::create('YouTube', $provider);
