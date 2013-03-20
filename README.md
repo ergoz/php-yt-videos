@@ -2,11 +2,11 @@
 
 **Universal video library for Vimeo & YouTube APIs and PHP 5.3+**
 
-[![Build Status](https://travis-ci.org/dukt/videos.png?branch=master)](https://travis-ci.org/adrianmacneil/omnipay)
+[![Build Status](https://travis-ci.org/dukt/videos.png?branch=master)](https://travis-ci.org/dukt/videos)
 
 ## Installation
 
-Omnipay is installed via [Composer](http://getcomposer.org/). To install, simply add it
+Dukt Videos is installed via [Composer](http://getcomposer.org/). To install, simply add it
 to your `composer.json` file:
 
 ```json
