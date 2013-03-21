@@ -1,0 +1,8 @@
+{% extends "layout.twig" %}
+
+{% set title = service.name~": Response" %}
+{% block content %}
+
+<pre>{{dump(response)}}</pre>
+
+{% endblock %}

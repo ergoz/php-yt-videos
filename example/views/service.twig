@@ -29,7 +29,14 @@ $response = $service->initialize($params);</pre>
 
         {% endfor %}
 
-        <div class="form-actions"><button type="submit" class="btn">Save</button></div>
+        <div class="form-actions"><button type="submit" class="btn btn-primary">Connect</button></div>
     </form>
+
+    <h3>Service Methods</h3>
+    <p>Click on a method to generate a test request.</p>
+
+    <ul>
+        <li><a href="/services/{{ service.shortName }}/getUserInfos">getUserInfos()</a></li>
+    </ul>
 
 {% endblock %}
