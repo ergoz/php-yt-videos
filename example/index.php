@@ -64,6 +64,27 @@ $app->post('/services/{name}', function($name) use ($app) {
     
 });
 
+// create service revoke
+$app->get('/services/{name}/revoke', function($name) use ($app) {
+
+    echo $app['request']->getPathInfo();
+
+    // retrieve service with params
+
+    $service = Dukt\Videos\Common\ServiceFactory::create($name);
+    $sessionVar = 'dukt.videos.'.$service->getShortName();
+    $parameters = $app['session']->get($sessionVar);
+    $service->initialize((array) $parameters);
+
+    $parameters['token'] = '';
+
+    $app['session']->set($sessionVar, $parameters);
+
+    return $app->redirect('/services/'.$name);
+
+});
+
+
 // create service authorize
 $app->get('/services/{name}/authorize', function($name) use ($app) {
 
@@ -74,8 +95,7 @@ $app->get('/services/{name}/authorize', function($name) use ($app) {
     $parameters = $app['session']->get($sessionVar);
     $service->initialize((array) $parameters);
 
-
-    $provider = \OAuth\OAuth::provider($service->providerClass, array(
+    $provider = \OAuth\OAuth::provider($service->getProviderClass(), array(
         'id' => $parameters['id'],
         'secret' => $parameters['secret'],
         'redirect_url' => $app['request']->getSchemeAndHttpHost().$app['request']->getBaseUrl().$app['request']->getPathInfo()
@@ -110,6 +130,9 @@ $app->get('/services/{name}/authorize', function($name) use ($app) {
     return $app->redirect($redirect);
 
 });
+
+
+
 
 
 // create service getUserInfos
@@ -161,6 +184,66 @@ $app->post('/services/{name}/getUserInfos', function($name) use ($app) {
     $app['session']->set($sessionVar.'.getUserInfos', $params);
 
     $response = $service->getUserInfos($params);
+
+    return $app['twig']->render('response.twig', array(
+        'service' => $service,
+        'response' => $response,
+    ));
+});
+
+
+
+
+
+// create service getVideo
+$app->get('/services/{name}/getVideo', function($name) use ($app) {
+    $service = Dukt\Videos\Common\ServiceFactory::create($name);
+    $sessionVar = 'dukt.videos.'.$service->getShortName();
+    $service->initialize((array) $app['session']->get($sessionVar));
+
+    $params = $app['session']->get($sessionVar.'.getVideo', array());
+
+    return $app['twig']->render('request.twig', array(
+        'service' => $service,
+        'method' => 'getVideo',
+        'params' => $params,
+    ));
+});
+
+
+// post service getVideo
+$app->post('/services/{name}/getVideo', function($name) use ($app) {
+    
+    $service = Dukt\Videos\Common\ServiceFactory::create($name);
+    $sessionVar = 'dukt.videos.'.$service->getShortName();
+    $sessionData = $app['session']->get($sessionVar);
+    $service->initialize((array) $sessionData);
+    
+    $authorize_url = $app['request']->getSchemeAndHttpHost()
+        .$app['request']->getBaseUrl()
+        .'/services/'
+        .$service->getShortName()
+        .'/authorize';
+
+    $provider = \OAuth\OAuth::provider($service->getProviderClass(), array(
+        'id' => $sessionData['id'],
+        'secret' => $sessionData['secret'],
+        'redirect_url' => $authorize_url
+    ));
+
+    $token = unserialize(base64_decode($sessionData['token']));
+
+    $provider->setToken($token);
+
+    $service->setProvider($provider);
+
+    // load POST data
+    $params = $app['request']->get('params');
+
+    // save POST data into session
+    $app['session']->set($sessionVar.'.getVideo', $params);
+
+    $response = $service->getVideo($params);
 
     return $app['twig']->render('response.twig', array(
         'service' => $service,

@@ -1,7 +1,6 @@
 {% extends "layout.twig" %}
 
 {% block top %}
-
     <p><br /><a href="/">&laquo; Dukt Videos</a></p>
 {% endblock %}
 
@@ -23,20 +22,28 @@ $response = $service->initialize($params);</pre>
             <div class="control-group">
                 <label class="control-label" for="service_{{key}}">{{ key }}</label>
                 <div class="controls">
-                    <input type="text" name="service[{{key}}]" id="service_{{key}}" value="{{settings[key]}}" />
+                    <input type="text" name="service[{{key}}]" id="service_{{key}}" value="{{settings[key]}}"{% if key == 'token' %} disabled="disabled"{% endif %} />
                 </div>
             </div>
 
         {% endfor %}
 
-        <div class="form-actions"><button type="submit" class="btn btn-primary">Connect</button></div>
+        <div class="form-actions">
+            {% if settings['token'] is empty %}
+                <button type="submit" class="btn btn-primary">Connect</button>
+            {% else %}
+                <a class="btn" href="/services/{{ service.shortName }}/revoke">Revoke Access</a>
+            {% endif %}
+        </div>
     </form>
 
     <h3>Service Methods</h3>
+
     <p>Click on a method to generate a test request.</p>
 
     <ul>
         <li><a href="/services/{{ service.shortName }}/getUserInfos">getUserInfos()</a></li>
+        <li><a href="/services/{{ service.shortName }}/getVideo">getVideo()</a></li>
     </ul>
 
 {% endblock %}
