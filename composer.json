@@ -19,6 +19,8 @@
         "chrisnharvey/oauth": "dev-master"
     },
     "require-dev": {
-        "phpunit/phpunit": "~3.7.16"
+        "phpunit/phpunit": "~3.7.16",
+        "silex/silex": "1.0.*@dev",
+        "twig/twig": "~1.12"
     }
 }
