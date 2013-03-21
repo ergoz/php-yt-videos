@@ -8,9 +8,7 @@
     <ul>
         {% for service in services %}
             
-            <li>{{ service.name }}</li>
-            
-            <!--<li><a href="/services/{{ service.shortName }}">{{ service.name }}</a></li>-->
+            <li><a href="/services/{{ service.shortName }}">{{ service.name }}</a></li>
 
         {% endfor %}
     </ul>

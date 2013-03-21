@@ -1,0 +1,35 @@
+{% extends "layout.twig" %}
+
+{% block top %}
+
+    <p><br /><a href="/">&laquo; Dukt Videos</a></p>
+{% endblock %}
+
+{% set title = service.name %}
+
+{% block content %}
+
+    <p>You can create an instance of this service using:</p>
+    <pre>$service = ServiceFactory::create('{{ service.shortName }}');
+$response = $service->initialize($params);</pre>
+
+    <h3>Service Settings</h3>
+    <p><span class="label label-info">Note</span> These settings will be stored in your session and used to make calls to video service API.</p>
+
+    <form method="post" class="form-horizontal">
+
+        {% for key, default in service.getDefaultParameters %}
+
+            <div class="control-group">
+                <label class="control-label" for="service_{{key}}">{{ key }}</label>
+                <div class="controls">
+                    <input type="text" name="service[{{key}}]" id="service_{{key}}" value="{{settings[key]}}" />
+                </div>
+            </div>
+
+        {% endfor %}
+
+        <div class="form-actions"><button type="submit" class="btn">Save</button></div>
+    </form>
+
+{% endblock %}
