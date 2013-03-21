@@ -14,9 +14,16 @@
     "autoload": {
         "psr-0": { "Dukt\\Videos" : "src/" }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/dukt/oauth"
+        }
+    ],
     "require": {
         "php": ">=5.3.2",
-        "chrisnharvey/oauth": "dev-master",
+        "chrisnharvey/oauth": "dev-vimeo",
+        "dukt/vimeo": "dev-master",
         "symfony/finder": "2.2.*@dev"
     },
     "require-dev": {
