@@ -6,14 +6,37 @@ use Dukt\Videos\Common\AbstractService;
 
 class Service extends AbstractService
 {
+    protected $providerClass = "Google";
+
     public function getName()
     {
         return 'YouTube';
     }
 
-    public function metadata($video_id)
+    public function getProviderClass()
     {
+        return $this->providerClass;
+    }
 
+    public function getUserInfos()
+    {
+        $url = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&'.http_build_query(array(
+            'access_token' => $this->provider->token->access_token,
+        ));
+
+        $user = json_decode(file_get_contents($url), true);
+
+        return array(
+            'uid' => $user['id'],
+            'name' => $user['name'],
+            'email' => $user['email'],
+            'location' => null,
+            'image' => isset($user['picture']) ? $user['picture'] : null,
+            'description' => null,
+            'urls' => array(),
+        );
+
+        return $infos;
     }
     
     public function getVideoId($url)
@@ -49,6 +72,16 @@ class Service extends AbstractService
         // here we should have a valid video_id or false if service not matching
 
         return $video_id;
+    }
+
+    public function setProvider(\OAuth\Provider\Google $provider)
+    {
+        $this->provider = $provider;
+    }
+
+    public function metadata($video_id)
+    {
+
     }
     
 }

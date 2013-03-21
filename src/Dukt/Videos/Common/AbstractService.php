@@ -9,9 +9,11 @@ abstract class AbstractService implements ServiceInterface
 
     protected $parameters;
 
-    public function __construct()
+    public $provider;
+
+    public function __construct(Provider $provider = null)
     {
-       // $this->provider = $provider;
+       $this->provider = $provider;
     }
 
     public function initialize(array $parameters = array())
@@ -55,10 +57,10 @@ abstract class AbstractService implements ServiceInterface
     {
         return array(
             'id' => "",
-            'secret' => ""
+            'secret' => "",
+            'token' => ""
         );
     }
-
 
     public function getId()
     {
@@ -78,6 +80,16 @@ abstract class AbstractService implements ServiceInterface
     public function setSecret($secret)
     {
         return $this->setParameter('secret', $secret);
+    }
+
+    public function getToken()
+    {
+        return $this->getParameter('token');
+    }
+
+    public function setToken($token)
+    {
+        return $this->setParameter('token', $token);
     }
 
 
