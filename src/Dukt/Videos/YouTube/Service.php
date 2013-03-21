@@ -13,11 +13,6 @@ class Service extends AbstractService
         return 'YouTube';
     }
 
-    public function getProviderClass()
-    {
-        return $this->providerClass;
-    }
-
     public function getUserInfos()
     {
         $url = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&'.http_build_query(array(
@@ -27,7 +22,7 @@ class Service extends AbstractService
         $user = json_decode(file_get_contents($url), true);
 
         return array(
-            'uid' => $user['id'],
+            'uid' => $this->provider->token->uid,
             'name' => $user['name'],
             'email' => $user['email'],
             'location' => null,
@@ -35,8 +30,6 @@ class Service extends AbstractService
             'description' => null,
             'urls' => array(),
         );
-
-        return $infos;
     }
     
     public function getVideoId($url)

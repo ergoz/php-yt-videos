@@ -3,7 +3,7 @@
 namespace Dukt\Videos\Common;
 
 /**
- * Payment gateway interface
+ * Video Service interface
  */
 interface ServiceInterface
 {

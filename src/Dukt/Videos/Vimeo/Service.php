@@ -2,20 +2,73 @@
 
 namespace Dukt\Videos\Vimeo;
 
+use Dukt\Vimeo;
 use Dukt\Videos\Common\AbstractService;
+use Dukt\Videos\YouTube;
+
 
 class Service extends AbstractService
 {
+    protected $providerClass = "Vimeo";
+
     public function getName()
     {
         return 'Vimeo';
     }
 
-    public function metadata($video_id)
-    {
 
+    public function getVideo($opts)
+    {
+        //var_dump($this->provider);
+
+        $consumer_key = $this->provider->consumer->client_id;
+        $consumer_secret = $this->provider->consumer->secret;
+
+        $token = $this->provider->token->access_token;
+        $token_secret = $this->provider->token->secret;
+
+        $vimeo = new Vimeo($consumer_key, $consumer_secret);
+        $vimeo->setToken($token, $token_secret);
+        
+        $method = 'vimeo.videos.getInfo';
+
+        $params = array();
+        $params['video_id'] = $opts['id'];
+
+        $r = $vimeo->call($method, $params);
+
+        $video = $r->video;
+
+        $video = new Video($r->video[0]);
+
+        return $video;
     }
-    
+
+
+    public function getUserInfos()
+    {
+        //var_dump($this->provider);
+
+        $consumer_key = $this->provider->consumer->client_id;
+        $consumer_secret = $this->provider->consumer->secret;
+
+        $token = $this->provider->token->access_token;
+        $token_secret = $this->provider->token->secret;
+
+        $vimeo = new Vimeo($consumer_key, $consumer_secret);
+        $vimeo->setToken($token, $token_secret);
+
+        
+        $method = 'vimeo.people.getInfo';
+
+        $params = array();
+
+        $r = $vimeo->call($method, $params);
+
+
+        return $r;
+    }
+
     public function getVideoId($url)
     {
 
@@ -49,6 +102,16 @@ class Service extends AbstractService
         // here we should have a valid video_id or false if service not matching
 
         return $video_id;
+    }
+    
+    public function setProvider(\OAuth\Provider\Vimeo $provider)
+    {
+        $this->provider = $provider;
+    }
+
+    public function metadata($video_id)
+    {
+
     }
     
 }

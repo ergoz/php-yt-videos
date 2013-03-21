@@ -16,6 +16,21 @@ abstract class AbstractService implements ServiceInterface
        $this->provider = $provider;
     }
 
+
+    public function requestParameters($method)
+    {
+        $array = array();
+
+        switch($method)
+        {
+            case "getVideo":
+            $array = array('id');
+            break;
+        }
+
+        return $array;
+    }
+
     public function initialize(array $parameters = array())
     {
         $this->parameters = new ParameterBag;
@@ -35,6 +50,8 @@ abstract class AbstractService implements ServiceInterface
     }
 
 
+
+
     public function get_video($video_url)
     {
         
@@ -51,6 +68,11 @@ abstract class AbstractService implements ServiceInterface
         $sn = Helper::getServiceShortName(get_class($this));
         
         return $sn;
+    }
+    
+    public function getProviderClass()
+    {
+        return $this->providerClass;
     }
 
     public function getDefaultParameters()
