@@ -9,13 +9,13 @@
 Dukt Videos is installed via [Composer](http://getcomposer.org/). To install, simply add it
 to your `composer.json` file:
 
-```json
-{
-    "require": {
-        "dukt/videos": "0.1.*"
+    json
+    {
+        "require": {
+            "dukt/videos": "0.1.*"
+        }
     }
-}
-```
+
 
 And run composer to update your dependencies:
 
@@ -31,54 +31,54 @@ The following video services are implemented :
 
 ### Creating a service
 
-```
-$service = \Dukt\Videos\Common\ServiceFactory::create('YouTube', $provider);
 
-$url = "http://www.youtube.com/watch?v=0ZUvQ5h-TCA";
+    $service = \Dukt\Videos\Common\ServiceFactory::create('YouTube', $provider);
 
-$videoId = $service->getVideoId($url);
+    $url = "http://www.youtube.com/watch?v=0ZUvQ5h-TCA";
 
-if($videoId) {
-    ?>
-    <h1>Videos Infos</h1>
-    <ul>
-        <li>url : <?php echo $url?></li>
-        <li>videoId : <?php echo $videoId?></li>
-    </ul>
-    <?php
-}
-else
-{
-    ?>
-    <h1>Error</h1>
-    <p>Invalid Video URL</p>
-    <?php
-}
-```
+    $videoId = $service->getVideoId($url);
+
+    if($videoId) {
+        ?>
+        <h1>Videos Infos</h1>
+        <ul>
+            <li>url : <?php echo $url?></li>
+            <li>videoId : <?php echo $videoId?></li>
+        </ul>
+        <?php
+    }
+    else
+    {
+        ?>
+        <h1>Error</h1>
+        <p>Invalid Video URL</p>
+        <?php
+    }
+
 
 ## Creating an OAuth Provider
 
-```
-$provider = $provider->process(function($url, $token = null) {
 
-    if ($token) {
-        $_SESSION['token'] = base64_encode(serialize($token));
-    }
+    $provider = $provider->process(function($url, $token = null) {
 
-    header("Location: {$url}");
+        if ($token) {
+            $_SESSION['token'] = base64_encode(serialize($token));
+        }
 
-    exit;
+        header("Location: {$url}");
 
-}, function() {
-    return unserialize(base64_decode($_SESSION['token']));
-});
+        exit;
+
+    }, function() {
+        return unserialize(base64_decode($_SESSION['token']));
+    });
 
 
-// retrieve token and store it somewhere safe
+    // retrieve token and store it somewhere safe
 
-$token = $provider->token();
-$token = base64_encode(serialize($token));
-```
+    $token = $provider->token();
+    $token = base64_encode(serialize($token));
+
 
 ## Feedback
 
