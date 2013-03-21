@@ -13,6 +13,14 @@ abstract class AbstractService implements ServiceInterface
        // $this->provider = $provider;
     }
 
+
+    public function getShortName()
+    {
+        $sn = Helper::getServiceShortName(get_class($this));
+        
+        return $sn;
+    }
+
     public function get_video($video_url)
     {
         
@@ -22,4 +30,6 @@ abstract class AbstractService implements ServiceInterface
     {
 
     }
+
+
 }

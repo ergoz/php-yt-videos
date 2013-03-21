@@ -6,6 +6,11 @@ use Dukt\Videos\Common\AbstractService;
 
 class Service extends AbstractService
 {
+    public function getName()
+    {
+        return 'YouTube';
+    }
+
     public function metadata($video_id)
     {
 

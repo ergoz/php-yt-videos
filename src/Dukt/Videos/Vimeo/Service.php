@@ -2,10 +2,15 @@
 
 namespace Dukt\Videos\Vimeo;
 
-use Dukt\Videos\AbstractService;
+use Dukt\Videos\Common\AbstractService;
 
 class Service extends AbstractService
 {
+    public function getName()
+    {
+        return 'Vimeo';
+    }
+
     public function metadata($video_id)
     {
 
