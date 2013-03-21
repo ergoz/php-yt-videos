@@ -2,15 +2,45 @@
 
 namespace Dukt\Videos\Common;
 
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 abstract class AbstractService implements ServiceInterface
 {
 
-    protected $provider;
+    protected $parameters;
 
     public function __construct()
     {
        // $this->provider = $provider;
+    }
+
+    public function initialize(array $parameters = array())
+    {
+        $this->parameters = new ParameterBag;
+
+        // set default parameters
+        foreach ($this->getDefaultParameters() as $key => $value) {
+            if (is_array($value)) {
+                $this->parameters->set($key, reset($value));
+            } else {
+                $this->parameters->set($key, $value);
+            }
+        }
+
+        Helper::initialize($this, $parameters);
+
+        return $this;
+    }
+
+
+    public function get_video($video_url)
+    {
+        
+    }
+
+    public function get_embed($video_id, $user_embed_opts)
+    {
+
     }
 
 
@@ -21,14 +51,52 @@ abstract class AbstractService implements ServiceInterface
         return $sn;
     }
 
-    public function get_video($video_url)
+    public function getDefaultParameters()
     {
-        
+        return array(
+            'id' => "",
+            'secret' => ""
+        );
     }
 
-    public function get_embed($video_id, $user_embed_opts)
-    {
 
+    public function getId()
+    {
+        return $this->getParameter('id');
+    }
+
+    public function setId($id)
+    {
+        return $this->setParameter('id', $id);
+    }
+
+    public function getSecret()
+    {
+        return $this->getParameter('secret');
+    }
+
+    public function setSecret($secret)
+    {
+        return $this->setParameter('secret', $secret);
+    }
+
+
+
+    public function getParameters()
+    {
+        return $this->parameters->all();
+    }
+
+    protected function getParameter($key)
+    {
+        return $this->parameters->get($key);
+    }
+
+    protected function setParameter($key, $value)
+    {
+        $this->parameters->set($key, $value);
+
+        return $this;
     }
 
 

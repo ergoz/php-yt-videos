@@ -7,6 +7,29 @@ namespace Dukt\Videos\Common;
  */
 class Helper
 {
+    public static function camelCase($str)
+    {
+        return preg_replace_callback(
+            '/_([a-z])/',
+            function ($match) {
+                return strtoupper($match[1]);
+            },
+            $str
+        );
+    }
+    
+    public static function initialize(&$target, $parameters)
+    {
+        if (is_array($parameters)) {
+            foreach ($parameters as $key => $value) {
+                $method = 'set'.ucfirst(static::camelCase($key));
+                if (method_exists($target, $method)) {
+                    $target->$method($value);
+                }
+            }
+        }
+    }
+
     public static function getServiceShortName($className)
     {
         if (0 === strpos($className, '\\')) {
