@@ -15,6 +15,15 @@ class Service extends AbstractService
 
     public function getUserInfos()
     {
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
+
+        // request
+
         $url = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&'.http_build_query(array(
             'access_token' => $this->provider->token->access_token,
         ));
@@ -30,12 +39,20 @@ class Service extends AbstractService
             'description' => null,
             'urls' => array(),
         );
+        
+
+        return NULL;
     }
 
 
 
     public function getVideo($opts)
     {
+        // authentication required
+        
+        if(!$this->provider) {
+            return NULL;
+        }
 
         $url = 'https://gdata.youtube.com/feeds/api/videos/'.$opts['id'].'?v=2&'.http_build_query(array(
             'refresh_token' => $this->provider->token->refresh_token,

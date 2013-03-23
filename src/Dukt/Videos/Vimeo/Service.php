@@ -18,7 +18,12 @@ class Service extends AbstractService
 
     public function getVideo($opts)
     {
-        //var_dump($this->provider);
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
 
         $consumer_key = $this->provider->consumer->client_id;
         $consumer_secret = $this->provider->consumer->secret;
@@ -46,7 +51,12 @@ class Service extends AbstractService
 
     public function getUserInfos()
     {
-        //var_dump($this->provider);
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+        
 
         $consumer_key = $this->provider->consumer->client_id;
         $consumer_secret = $this->provider->consumer->secret;
