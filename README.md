@@ -153,3 +153,5 @@ web server (PHP 5.4+):
 **Please provide feedback!** We want to make this library useful in as many projects as possible.
 Please raise a Github issue, and point out what you do and don't like, or fork the project and make
 suggestions. **No issue is too small.**
+
+This plugin is actively maintained by [Benjamin David](https://github.com/benjamindavid), from [Dukt](http://dukt.net/).
