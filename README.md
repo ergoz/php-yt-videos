@@ -59,36 +59,55 @@ else
 
 ## OAuth Providers
 
-For authenticated call to video services, you need to set an OAuth provider. Here is how to create one :
+For authenticated calls, video service need an OAuth provider. Each video service has its own provider :
+
+**Vimeo**
+
+* Service : Vimeo
+* OAuth Provider : Vimeo
+
+**YouTube**
+
+* Service : YouTube
+* OAuth Provider : Google
+
+Here is how to create an OAuth provider and use it with a service :
 
 ```php
-// Create the OAuth provider
 
-$provider = \OAuth\OAuth::provider('YouTube', array(
-    'id' => CLIENT_ID,
-    'secret' => CLIENT_SECRET,
-    'redirect_url' => REDIRECT_URL
-));    
+    // Create the OAuth provider
 
-$provider = $provider->process(function($url, $token = null) {
+    $provider = \OAuth\OAuth::provider('Google', array(
+        'id' => CLIENT_ID,
+        'secret' => CLIENT_SECRET,
+        'redirect_url' => REDIRECT_URL
+    ));    
 
-    if ($token) {
-        $_SESSION['token'] = base64_encode(serialize($token));
-    }
+    $provider = $provider->process(function($url, $token = null) {
 
-    header("Location: {$url}");
+        if ($token) {
+            $_SESSION['token'] = base64_encode(serialize($token));
+        }
 
-    exit;
+        header("Location: {$url}");
 
-}, function() {
-    return unserialize(base64_decode($_SESSION['token']));
-});
+        exit;
+
+    }, function() {
+        return unserialize(base64_decode($_SESSION['token']));
+    });
 
 
-// Retrieve token and store it somewhere safe :
+    // Create video service
 
-$token = $provider->token();
-$token = base64_encode(serialize($token));
+    $service = Dukt\Videos\Common\ServiceFactory::create('YouTube');
+    $service->setProvider($provider);
+
+
+    // Retrieve token and store it somewhere safe :
+
+    $token = $provider->token();
+    $token = base64_encode(serialize($token));
 ```
 
 If you want to initialize the OAuth provider with an existing token, you will want to do something like this :
@@ -101,7 +120,7 @@ $token = unserialize(base64_decode(STORED_TOKEN));
 
 // Create the OAuth provider
 
-$provider = \OAuth\OAuth::provider('YouTube', array(
+$provider = \OAuth\OAuth::provider('Google', array(
     'id' => CLIENT_ID,
     'secret' => CLIENT_SECRET,
     'redirect_url' => REDIRECT_URL
@@ -112,7 +131,7 @@ $provider->setToken($token);
 
 // Create video service
 
-$service = Dukt\Videos\Common\ServiceFactory::create($name);
+$service = Dukt\Videos\Common\ServiceFactory::create('YouTube');
 $service->setProvider($provider);
 ```
 
