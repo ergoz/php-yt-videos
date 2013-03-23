@@ -245,7 +245,7 @@ $app->post('/services/{name}/getVideo', function($name) use ($app) {
 
     $response = $service->getVideo($params);
 
-    return $app['twig']->render('response.twig', array(
+    return $app['twig']->render('responseVideo.twig', array(
         'service' => $service,
         'response' => $response,
     ));
