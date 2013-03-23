@@ -9,8 +9,7 @@
 Dukt Videos is installed via [Composer](http://getcomposer.org/). To install, simply add it
 to your `composer.json` file:
 
-```
-json
+```json
 {
     "require": {
         "dukt/videos": "0.1.*"
@@ -33,7 +32,7 @@ The following video services are implemented :
 
  Creating a video  web site is very easy, all you need to do is : use the ServiceFactory in order to get a Service instance, and play with the service as you like. You can also set an OAuth provider if you want to make authenticated call to a service.
 
-```
+```php
 $service = \Dukt\Videos\Common\ServiceFactory::create('YouTube', $provider);
 
 $url = "http://www.youtube.com/watch?v=0ZUvQ5h-TCA";
@@ -62,7 +61,7 @@ else
 
 For authenticated call to video services, you need to set an OAuth provider. Here is how to create one :
 
-```
+```php
 // Create the OAuth provider
 
 $provider = \OAuth\OAuth::provider('YouTube', array(
@@ -94,7 +93,7 @@ $token = base64_encode(serialize($token));
 
 If you want to initialize the OAuth provider with an existing token, you will want to do something like this :
 
-```
+```php
 // Retrieve token
 
 $token = unserialize(base64_decode(STORED_TOKEN));
