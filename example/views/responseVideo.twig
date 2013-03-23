@@ -1,0 +1,42 @@
+{% extends "layout.twig" %}
+
+{% block top %}
+    <p><br /><a href="../{{service.shortName}}">&laquo; {{service.name}}</a></p>
+{% endblock %}
+
+{% set title = service.name~": Response" %}
+{% block content %}
+
+
+
+{% if response.id is defined %}
+    <p><b>$response->getId()</b></p>
+    <pre>{{ dump(response.id) }}</pre>
+{% endif %}
+
+{% if response.url is defined %}
+    <p><b>$response->getUrl()</b></p>
+    <pre>{{ dump(response.url) }}</pre>
+{% endif %}
+
+{% if response.title is defined %}
+    <p><b>$response->getTitle()</b></p>
+    <pre>{{ dump(response.title) }}</pre>
+{% endif %}
+
+{% if response.plays is defined %}
+    <p><b>$response->getPlays()</b></p>
+    <pre>{{ dump(response.plays) }}</pre>
+{% endif %}
+
+{% if response.duration is defined %}
+    <p><b>$response->getDuration()</b></p>
+    <pre>{{ dump(response.duration) }}</pre>
+{% endif %}
+
+{% if response.description is defined %}
+    <p><b>$response->getDescription()</b></p>
+    <pre>{{ dump(response.description) }}</pre>
+{% endif %}
+
+{% endblock %}

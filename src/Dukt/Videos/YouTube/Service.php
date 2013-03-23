@@ -8,10 +8,14 @@ class Service extends AbstractService
 {
     protected $providerClass = "YouTube";
 
+    // --------------------------------------------------------------------
+
     public function getName()
     {
         return 'YouTube';
     }
+
+    // --------------------------------------------------------------------
 
     public function getUserInfos()
     {
@@ -26,6 +30,7 @@ class Service extends AbstractService
 
         $url = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&'.http_build_query(array(
             'access_token' => $this->provider->token->access_token,
+
         ));
 
         $user = json_decode(file_get_contents($url), true);
@@ -39,12 +44,9 @@ class Service extends AbstractService
             'description' => null,
             'urls' => array(),
         );
-        
-
-        return NULL;
     }
 
-
+    // --------------------------------------------------------------------
 
     public function getVideo($opts)
     {
@@ -64,14 +66,10 @@ class Service extends AbstractService
         $video = new Video($xml_obj);
 
         return $video;
-
     }
 
-           
-                
-               
-                
-        
+    // --------------------------------------------------------------------
+
     public function getVideoId($url)
     {
         // check if url works with this service and extract video_id
@@ -107,14 +105,10 @@ class Service extends AbstractService
         return $video_id;
     }
 
+    // --------------------------------------------------------------------
+
     public function setProvider(\OAuth\Provider\YouTube $provider)
     {
         $this->provider = $provider;
-    }
-
-    public function metadata($video_id)
-    {
-
-    }
-    
+    }    
 }
