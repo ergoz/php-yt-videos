@@ -30,7 +30,7 @@ The following video services are implemented :
 * Vimeo
 * YouTube
 
- Creating a video  web site is very easy, all you need to do is : use the ServiceFactory in order to get a Service instance, and play with the service as you like. You can also set an OAuth provider if you want to make authenticated call to a service.
+Creating a video  web site is very easy, all you need to do is : use the ServiceFactory in order to get a Service instance, and play with the service as you like. You can also set an OAuth provider if you want to make authenticated call to a service.
 
 ```php
 $service = \Dukt\Videos\Common\ServiceFactory::create('YouTube', $provider);
