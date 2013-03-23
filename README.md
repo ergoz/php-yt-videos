@@ -9,12 +9,14 @@
 Dukt Videos is installed via [Composer](http://getcomposer.org/). To install, simply add it
 to your `composer.json` file:
 
+```
     json
     {
         "require": {
             "dukt/videos": "0.1.*"
         }
     }
+```
 
 
 And run composer to update your dependencies:
@@ -29,9 +31,9 @@ The following video services are implemented :
 * Vimeo
 * YouTube
 
-### Creating a service
+ Creating a video  web site is very easy, all you need to do is : use the ServiceFactory in order to get a Service instance, and play with the service as you like. You can also set an OAuth provider if you want to make authenticated call to a service.
 
-
+```
     $service = \Dukt\Videos\Common\ServiceFactory::create('YouTube', $provider);
 
     $url = "http://www.youtube.com/watch?v=0ZUvQ5h-TCA";
@@ -54,10 +56,20 @@ The following video services are implemented :
         <p>Invalid Video URL</p>
         <?php
     }
+```
 
+## OAuth Providers
 
-## Creating an OAuth Provider
+For authenticated call to video services, you need to set an OAuth provider. Here is how to create one :
 
+```
+    // Create the OAuth provider
+    
+    $provider = \OAuth\OAuth::provider('YouTube', array(
+        'id' => CLIENT_ID,
+        'secret' => CLIENT_SECRET,
+        'redirect_url' => REDIRECT_URL
+    ));    
 
     $provider = $provider->process(function($url, $token = null) {
 
@@ -74,10 +86,47 @@ The following video services are implemented :
     });
 
 
-    // retrieve token and store it somewhere safe
+    // Retrieve token and store it somewhere safe :
 
     $token = $provider->token();
     $token = base64_encode(serialize($token));
+```
+
+If you want to initialize the OAuth provider with an existing token, you will want to do something like this :
+
+```
+    // Retrieve token
+
+    $token = unserialize(base64_decode(STORED_TOKEN));
+
+
+    // Create the OAuth provider
+
+    $provider = \OAuth\OAuth::provider('YouTube', array(
+        'id' => CLIENT_ID,
+        'secret' => CLIENT_SECRET,
+        'redirect_url' => REDIRECT_URL
+    ));    
+    
+    $provider->setToken($token);
+
+
+    // Create video service
+    
+    $service = Dukt\Videos\Common\ServiceFactory::create($name);
+    $service->setProvider($provider);
+```
+
+Dukt Videos relies on [dukt/oauth](https://github.com/dukt/oauth), which is a fork of [chrisnharvey/oauth](https://github.com/chrisnharvey/oauth) to which we added Vimeo OAuth provider. We plan to use chrisnharvey's version as soon as our Vimeo pull request is accepted.
+
+
+## Example Application
+
+An example application is provided in the `example` directory. You can run it using PHP's built in
+web server (PHP 5.4+):
+
+    $ php composer.phar update --dev
+    $ php -S localhost:8000 -t example/
 
 
 ## Feedback
