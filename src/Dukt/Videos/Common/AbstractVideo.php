@@ -6,5 +6,8 @@ namespace Dukt\Videos\Common;
 
 abstract class AbstractVideo implements VideoInterface
 {
-
+    public function getTitle()
+    {
+        return $this->title;
+    }
 }

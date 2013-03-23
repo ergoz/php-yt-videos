@@ -4,7 +4,6 @@ namespace Dukt\Videos\Vimeo;
 
 use Dukt\Vimeo;
 use Dukt\Videos\Common\AbstractService;
-use Dukt\Videos\YouTube;
 
 
 class Service extends AbstractService

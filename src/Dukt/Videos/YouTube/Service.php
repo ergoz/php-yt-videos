@@ -6,7 +6,7 @@ use Dukt\Videos\Common\AbstractService;
 
 class Service extends AbstractService
 {
-    protected $providerClass = "Google";
+    protected $providerClass = "YouTube";
 
     public function getName()
     {
@@ -31,7 +31,30 @@ class Service extends AbstractService
             'urls' => array(),
         );
     }
-    
+
+
+
+    public function getVideo($opts)
+    {
+
+        $url = 'https://gdata.youtube.com/feeds/api/videos/'.$opts['id'].'?v=2&'.http_build_query(array(
+            'refresh_token' => $this->provider->token->refresh_token,
+        ));
+
+        $result = file_get_contents($url);
+        $xml_obj = simplexml_load_string($result);   
+
+        $video = new Video($xml_obj);
+
+        return $video;
+
+    }
+
+           
+                
+               
+                
+        
     public function getVideoId($url)
     {
         // check if url works with this service and extract video_id
@@ -67,7 +90,7 @@ class Service extends AbstractService
         return $video_id;
     }
 
-    public function setProvider(\OAuth\Provider\Google $provider)
+    public function setProvider(\OAuth\Provider\YouTube $provider)
     {
         $this->provider = $provider;
     }
