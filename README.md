@@ -75,44 +75,45 @@ Here is how to create an OAuth provider and use it with a service :
 
 ```php
 
-    // Create the OAuth provider
+// Create the OAuth provider
 
-    $provider = \OAuth\OAuth::provider('Google', array(
-        'id' => CLIENT_ID,
-        'secret' => CLIENT_SECRET,
-        'redirect_url' => REDIRECT_URL
-    ));    
+$provider = \OAuth\OAuth::provider('Google', array(
+    'id' => CLIENT_ID,
+    'secret' => CLIENT_SECRET,
+    'redirect_url' => REDIRECT_URL
+));    
 
-    $provider = $provider->process(function($url, $token = null) {
+$provider = $provider->process(function($url, $token = null) {
 
-        if ($token) {
-            $_SESSION['token'] = base64_encode(serialize($token));
-        }
+    if ($token) {
+        $_SESSION['token'] = base64_encode(serialize($token));
+    }
 
-        header("Location: {$url}");
+    header("Location: {$url}");
 
-        exit;
+    exit;
 
-    }, function() {
-        return unserialize(base64_decode($_SESSION['token']));
-    });
-
-
-    // Create video service
-
-    $service = Dukt\Videos\Common\ServiceFactory::create('YouTube');
-    $service->setProvider($provider);
+}, function() {
+    return unserialize(base64_decode($_SESSION['token']));
+});
 
 
-    // Retrieve token and store it somewhere safe :
+// Create video service
 
-    $token = $provider->token();
-    $token = base64_encode(serialize($token));
+$service = Dukt\Videos\Common\ServiceFactory::create('YouTube');
+$service->setProvider($provider);
+
+
+// Retrieve token and store it somewhere safe :
+
+$token = $provider->token();
+$token = base64_encode(serialize($token));
 ```
 
 If you want to initialize the OAuth provider with an existing token, you will want to do something like this :
 
 ```php
+
 // Retrieve token
 
 $token = unserialize(base64_decode(STORED_TOKEN));
