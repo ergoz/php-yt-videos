@@ -6,7 +6,9 @@ use Dukt\Videos\Common\AbstractVideo;
 
 class Video extends AbstractVideo
 {
-    public function __construct($xml)
+    var $embedUrl =  "http://www.youtube.com/embed/%s?wmode=transparent";
+    
+    public function instantiate($xml)
     {
         // extract videoId
 

@@ -63,7 +63,8 @@ class Service extends AbstractService
         $result = file_get_contents($url);
         $xml_obj = simplexml_load_string($result);   
 
-        $video = new Video($xml_obj);
+        $video = new Video();
+        $video->instantiate($xml_obj);
 
         return $video;
     }

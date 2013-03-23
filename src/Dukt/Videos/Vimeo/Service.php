@@ -43,7 +43,8 @@ class Service extends AbstractService
 
         $video = $r->video;
 
-        $video = new Video($r->video[0]);
+        $video = new Video();
+        $video->instantiate($r->video[0]);
 
         return $video;
     }
@@ -56,7 +57,7 @@ class Service extends AbstractService
         if(!$this->provider) {
             return NULL;
         }
-        
+
 
         $consumer_key = $this->provider->consumer->client_id;
         $consumer_secret = $this->provider->consumer->secret;
