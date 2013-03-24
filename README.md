@@ -57,6 +57,16 @@ else
 }
 ```
 
+## Service Methods
+
+The main methods implemented by gateways are:
+
+* `getFavorites()` - Get favorite videos
+* `getUploads()` - Get upload videos
+* `getUserInfos()` - Get user informations
+* `getVideo($id)` - Get video from its ID
+* `getVideoFromUrl($id)` - Get video from its URL
+
 ## OAuth Providers
 
 For authenticated calls, video service need an OAuth provider. Each video service has its own provider :
