@@ -59,13 +59,19 @@ else
 
 ## Service Methods
 
-The main methods implemented by gateways are:
+The main methods implemented by video services are:
 
 * `getFavorites()` - Get favorite videos
 * `getUploads()` - Get upload videos
 * `getUserInfos()` - Get user informations
 * `getVideo($id)` - Get video from its ID
 * `getVideoFromUrl($id)` - Get video from its URL
+
+## Video Methods
+
+The main methods implemented by video are:
+
+* `getEmbed($options)` - Get the video embed
 
 ## OAuth Providers
 
