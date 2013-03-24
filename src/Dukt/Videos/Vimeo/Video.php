@@ -7,8 +7,8 @@ use Dukt\Videos\Common\AbstractVideo;
 class Video extends AbstractVideo
 {
     var $embedUrl =  "http://player.vimeo.com/video/%s";
-    
-    public function __construct($videoResponse)
+
+    public function instantiate($videoResponse)
     {
         $this->id = $videoResponse->id;
         $this->url = 'http://vimeo.com/'.$videoResponse->id;

@@ -17,6 +17,18 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
+    public function getDefaultParameters()
+    {
+        return array(
+            'id' => "",
+            'secret' => "",
+            'developerKey' => "",
+            'token' => ""
+        );
+    }
+
+    // --------------------------------------------------------------------
+
     public function getUserInfos()
     {
         // authentication required
@@ -71,9 +83,102 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
+    public function getFavorites()
+    {
+        // authentication required
+        
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $developerKey = $this->provider->developerKey;
+
+
+        $url = 'https://gdata.youtube.com/feeds/api/users/default/favorites?v=2&'.http_build_query(array(
+            'access_token' => $this->provider->token->access_token,
+            'key' => $developerKey
+        ));           
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1); 
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                'Authorization:Bearer '.$this->provider->token->access_token,
+                'Content-Type:application/atom+xml',
+                'X-GData-Key:key='.$developerKey
+            ));
+
+        $result = curl_exec($curl);
+        curl_close ($curl);
+
+        //var_dump($result);
+        $xml_obj = simplexml_load_string($result);   
+    
+        $videos = array();
+        
+        foreach($xml_obj->entry as $v)
+        {
+            $video = new Video();
+            $video->instantiate($v);
+
+            array_push($videos, $video);
+        }
+
+        return $videos;
+    }
+
+    // --------------------------------------------------------------------
+
+    public function getUploads()
+    {
+        // authentication required
+        
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $developerKey = $this->provider->developerKey;
+
+
+        $url = 'https://gdata.youtube.com/feeds/api/users/default/uploads?v=2&'.http_build_query(array(
+            'access_token' => $this->provider->token->access_token,
+            'key' => $developerKey
+        ));           
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1); 
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                'Authorization:Bearer '.$this->provider->token->access_token,
+                'Content-Type:application/atom+xml',
+                'X-GData-Key:key='.$developerKey
+            ));
+
+        $result = curl_exec($curl);
+        curl_close ($curl);
+
+        //var_dump($result);
+        $xml_obj = simplexml_load_string($result);   
+    
+        $videos = array();
+        
+        foreach($xml_obj->entry as $v)
+        {
+            $video = new Video();
+            $video->instantiate($v);
+
+            array_push($videos, $video);
+        }
+
+        return $videos;
+    }
+
+    // --------------------------------------------------------------------
+
     public function getVideoId($url)
     {
         // check if url works with this service and extract video_id
+        
         $video_id = false;
 
         $regexp = array('/^https?:\/\/(www\.youtube\.com|youtube\.com|youtu\.be).*\/(watch\?v=)?(.*)/', 3);

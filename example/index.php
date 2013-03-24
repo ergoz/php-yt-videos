@@ -251,4 +251,141 @@ $app->post('/services/{name}/getVideo', function($name) use ($app) {
     ));
 });
 
+
+
+// create service getFavorites
+$app->get('/services/{name}/getFavorites', function($name) use ($app) {
+    $service = Dukt\Videos\Common\ServiceFactory::create($name);
+    $sessionVar = 'dukt.videos.'.$service->getShortName();
+    $service->initialize((array) $app['session']->get($sessionVar));
+
+    $params = $app['session']->get($sessionVar.'.getFavorites', array());
+
+    return $app['twig']->render('request.twig', array(
+        'service' => $service,
+        'method' => 'getFavorites',
+        'params' => $params,
+    ));
+});
+
+
+// post service getFavorites
+$app->post('/services/{name}/getFavorites', function($name) use ($app) {
+    
+    $service = Dukt\Videos\Common\ServiceFactory::create($name);
+    $sessionVar = 'dukt.videos.'.$service->getShortName();
+    $sessionData = $app['session']->get($sessionVar);
+    $service->initialize((array) $sessionData);
+    
+    $authorize_url = $app['request']->getSchemeAndHttpHost()
+        .$app['request']->getBaseUrl()
+        .'/services/'
+        .$service->getShortName()
+        .'/authorize';
+
+    $providerOptions = array();
+    $providerOptions['id'] = $sessionData['id'];
+    $providerOptions['secret'] = $sessionData['secret'];    
+    $providerOptions['redirect_url'] = $authorize_url;
+
+    if(isset($sessionData['developerKey']))
+    {
+        $providerOptions['developerKey'] = $sessionData['developerKey'];    
+    }
+
+    $provider = \OAuth\OAuth::provider($service->getProviderClass(), $providerOptions);
+
+    $token = unserialize(base64_decode($sessionData['token']));
+
+    // refresh token if needed ?
+
+    $provider->setToken($token);
+
+    $service->setProvider($provider);
+
+    // load POST data
+    $params = $app['request']->get('params');
+
+    // save POST data into session
+    $app['session']->set($sessionVar.'.getFavorites', $params);
+
+    $response = $service->getFavorites($params);
+
+    return $app['twig']->render('responseCollection.twig', array(
+        'service' => $service,
+        'response' => $response,
+    ));
+});
+
+
+
+
+
+
+
+// create service getUploads
+$app->get('/services/{name}/getUploads', function($name) use ($app) {
+    $service = Dukt\Videos\Common\ServiceFactory::create($name);
+    $sessionVar = 'dukt.videos.'.$service->getShortName();
+    $service->initialize((array) $app['session']->get($sessionVar));
+
+    $params = $app['session']->get($sessionVar.'.getUploads', array());
+
+    return $app['twig']->render('request.twig', array(
+        'service' => $service,
+        'method' => 'getUploads',
+        'params' => $params,
+    ));
+});
+
+
+// post service getUploads
+$app->post('/services/{name}/getUploads', function($name) use ($app) {
+    
+    $service = Dukt\Videos\Common\ServiceFactory::create($name);
+    $sessionVar = 'dukt.videos.'.$service->getShortName();
+    $sessionData = $app['session']->get($sessionVar);
+    $service->initialize((array) $sessionData);
+    
+    $authorize_url = $app['request']->getSchemeAndHttpHost()
+        .$app['request']->getBaseUrl()
+        .'/services/'
+        .$service->getShortName()
+        .'/authorize';
+
+    $providerOptions = array();
+    $providerOptions['id'] = $sessionData['id'];
+    $providerOptions['secret'] = $sessionData['secret'];    
+    $providerOptions['redirect_url'] = $authorize_url;
+
+    if(isset($sessionData['developerKey']))
+    {
+        $providerOptions['developerKey'] = $sessionData['developerKey'];    
+    }
+
+    $provider = \OAuth\OAuth::provider($service->getProviderClass(), $providerOptions);
+
+    $token = unserialize(base64_decode($sessionData['token']));
+
+    // refresh token if needed ?
+
+    $provider->setToken($token);
+
+    $service->setProvider($provider);
+
+    // load POST data
+    $params = $app['request']->get('params');
+
+    // save POST data into session
+    $app['session']->set($sessionVar.'.getUploads', $params);
+
+    $response = $service->getUploads($params);
+
+    return $app['twig']->render('responseCollection.twig', array(
+        'service' => $service,
+        'response' => $response,
+    ));
+});
+
+
 $app->run();

@@ -49,6 +49,12 @@ abstract class AbstractService implements ServiceInterface
         return $this;
     }
 
+    public function getVideoFromUrl($url)
+    {
+        $videoId = $this->getVideoId($url);
+
+        return $this->getVideo($videoId);
+    }
 
 
 
@@ -112,6 +118,16 @@ abstract class AbstractService implements ServiceInterface
     public function setToken($token)
     {
         return $this->setParameter('token', $token);
+    }
+
+    public function getDeveloperKey()
+    {
+        return $this->getParameter('developerKey');
+    }
+
+    public function setDeveloperKey($value)
+    {
+        return $this->setParameter('developerKey', $value);
     }
 
 
