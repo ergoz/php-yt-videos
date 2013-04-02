@@ -129,6 +129,47 @@ class Service extends AbstractService
         return $videos;        
     }
 
+    public function search($params = array())
+    {
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $consumer_key = $this->provider->consumer->client_id;
+        $consumer_secret = $this->provider->consumer->secret;
+
+        $token = $this->provider->token->access_token;
+        $token_secret = $this->provider->token->secret;
+
+        $vimeo = new Vimeo($consumer_key, $consumer_secret);
+        $vimeo->setToken($token, $token_secret);
+        
+        $method = 'vimeo.videos.search';
+
+        // $params = array();
+        $params['full_response'] = 1;
+        // $params['query'] = $q;
+
+        $r = $vimeo->call($method, $params);
+
+        $responseVideos = $r->videos->video;
+
+        $videos = array();
+
+
+        foreach($responseVideos as $responseVideo)
+        {
+            $video = new Video();
+            $video->instantiate($responseVideo);
+
+            array_push($videos, $video);
+        }
+
+        return $videos;        
+    }
+
     public function getUserInfos()
     {
         // authentication required

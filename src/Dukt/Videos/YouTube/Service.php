@@ -174,6 +174,58 @@ class Service extends AbstractService
     }
 
     // --------------------------------------------------------------------
+        
+
+    public function search($params = array())
+    {
+        // authentication required
+        
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $developerKey = $this->provider->developerKey;
+
+        $query = array(
+            'q' => $params['query'],
+            'start-index' => 1,
+            'max-results' => 20,
+            'access_token' => $this->provider->token->access_token,
+            'key' => $developerKey
+        );
+
+        $url = 'http://gdata.youtube.com/feeds/api/videos?v=2&'.http_build_query($query);           
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1); 
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                'Authorization:Bearer '.$this->provider->token->access_token,
+                'Content-Type:application/atom+xml',
+                'X-GData-Key:key='.$developerKey
+            ));
+
+        $result = curl_exec($curl);
+        curl_close ($curl);
+
+        //var_dump($result);
+        $xml_obj = simplexml_load_string($result);   
+    
+        $videos = array();
+        
+        foreach($xml_obj->entry as $v)
+        {
+            $video = new Video();
+            $video->instantiate($v);
+
+            array_push($videos, $video);
+        }
+
+
+        return $videos;
+    }
+
+    // --------------------------------------------------------------------
 
     public function getVideoId($url)
     {
