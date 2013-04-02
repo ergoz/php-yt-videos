@@ -24,7 +24,19 @@ abstract class AbstractService implements ServiceInterface
         switch($method)
         {
             case "getVideo":
-            $array = array('id');
+            $array = array('id' => "");
+            break;
+
+            case "search":
+            $array = array('q' => "", 'page' => 1, 'perPage' => 20);
+            break;
+
+            case "getFavorites":
+            $array = array('page' => 1, 'perPage' => 20);
+            break;
+
+            case "getUploads":
+            $array = array('page' => 1, 'perPage' => 20);
             break;
         }
 

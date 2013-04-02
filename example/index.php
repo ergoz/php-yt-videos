@@ -508,8 +508,6 @@ $app->post('/services/{name}/search', function($name) use ($app) {
     // save POST data into session
     $app['session']->set($sessionVar.'.search', $params);
 
-    $params['query'] = "nature";
-
     $response = $service->search($params);
 
     return $app['twig']->render('responseCollection.twig', array(

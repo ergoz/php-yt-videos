@@ -83,7 +83,7 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
-    public function getFavorites()
+    public function getFavorites($params = array())
     {
         // authentication required
         
@@ -94,10 +94,14 @@ class Service extends AbstractService
         $developerKey = $this->provider->developerKey;
 
 
-        $url = 'https://gdata.youtube.com/feeds/api/users/default/favorites?v=2&'.http_build_query(array(
+        $query = array(
+            'start-index' => $params['page'],
+            'max-results' => $params['perPage'],
             'access_token' => $this->provider->token->access_token,
             'key' => $developerKey
-        ));           
+        );
+
+        $url = 'https://gdata.youtube.com/feeds/api/users/default/favorites?v=2&'.http_build_query($query);           
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -129,7 +133,7 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
-    public function getUploads()
+    public function getUploads($params = array())
     {
         // authentication required
         
@@ -139,11 +143,14 @@ class Service extends AbstractService
 
         $developerKey = $this->provider->developerKey;
 
-
-        $url = 'https://gdata.youtube.com/feeds/api/users/default/uploads?v=2&'.http_build_query(array(
+        $query = array(
+            'start-index' => $params['page'],
+            'max-results' => $params['perPage'],
             'access_token' => $this->provider->token->access_token,
             'key' => $developerKey
-        ));           
+        );
+
+        $url = 'https://gdata.youtube.com/feeds/api/users/default/uploads?v=2&'.http_build_query($query);           
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -187,9 +194,9 @@ class Service extends AbstractService
         $developerKey = $this->provider->developerKey;
 
         $query = array(
-            'q' => $params['query'],
-            'start-index' => 1,
-            'max-results' => 20,
+            'q' => $params['q'],
+            'start-index' => $params['page'],
+            'max-results' => $params['perPage'],
             'access_token' => $this->provider->token->access_token,
             'key' => $developerKey
         );

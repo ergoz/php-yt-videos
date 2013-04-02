@@ -49,7 +49,7 @@ class Service extends AbstractService
         return $video;
     }
 
-    public function getFavorites()
+    public function getFavorites($params)
     {
         // authentication required
 
@@ -68,10 +68,12 @@ class Service extends AbstractService
         
         $method = 'vimeo.videos.getLikes';
 
-        $params = array();
-        $params['full_response'] = 1;
+        $query = array();
+        $query['full_response'] = 1;
+        $query['page'] = $params['page'];
+        $query['per_page'] = $params['perPage'];
 
-        $r = $vimeo->call($method, $params);
+        $r = $vimeo->call($method, $query);
 
         $responseVideos = $r->videos->video;
 
@@ -89,7 +91,7 @@ class Service extends AbstractService
         return $videos;        
     }
 
-    public function getUploads()
+    public function getUploads($params = array())
     {
         // authentication required
 
@@ -108,10 +110,12 @@ class Service extends AbstractService
         
         $method = 'vimeo.videos.getUploaded';
 
-        $params = array();
-        $params['full_response'] = 1;
+        $query = array();
+        $query['full_response'] = 1;
+        $query['page'] = $params['page'];
+        $query['per_page'] = $params['perPage'];
 
-        $r = $vimeo->call($method, $params);
+        $r = $vimeo->call($method, $query);
 
         $responseVideos = $r->videos->video;
 
@@ -148,11 +152,13 @@ class Service extends AbstractService
         
         $method = 'vimeo.videos.search';
 
-        // $params = array();
-        $params['full_response'] = 1;
-        // $params['query'] = $q;
+        $query = array();
+        $query['full_response'] = 1;
+        $query['page'] = $params['page'];
+        $query['per_page'] = $params['perPage'];
+        $query['query'] = $params['q'];
 
-        $r = $vimeo->call($method, $params);
+        $r = $vimeo->call($method, $query);
 
         $responseVideos = $r->videos->video;
 
