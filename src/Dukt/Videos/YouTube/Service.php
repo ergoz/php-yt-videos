@@ -91,44 +91,14 @@ class Service extends AbstractService
             return NULL;
         }
 
-        $developerKey = $this->provider->developerKey;
-
-
         $query = array(
             'start-index' => $params['page'],
             'max-results' => $params['perPage'],
-            'access_token' => $this->provider->token->access_token,
-            'key' => $developerKey
         );
 
-        $url = 'https://gdata.youtube.com/feeds/api/users/default/favorites?v=2&'.http_build_query($query);           
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1); 
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-                'Authorization:Bearer '.$this->provider->token->access_token,
-                'Content-Type:application/atom+xml',
-                'X-GData-Key:key='.$developerKey
-            ));
-
-        $result = curl_exec($curl);
-        curl_close ($curl);
-
-        //var_dump($result);
-        $xml_obj = simplexml_load_string($result);   
-    
-        $videos = array();
+        $r = $this->apiCall('users/default/favorites', $query);
         
-        foreach($xml_obj->entry as $v)
-        {
-            $video = new Video();
-            $video->instantiate($v);
-
-            array_push($videos, $video);
-        }
-
-        return $videos;
+        return $this->extractVideos($r);
     }
 
     // --------------------------------------------------------------------
@@ -141,43 +111,14 @@ class Service extends AbstractService
             return NULL;
         }
 
-        $developerKey = $this->provider->developerKey;
-
         $query = array(
             'start-index' => $params['page'],
-            'max-results' => $params['perPage'],
-            'access_token' => $this->provider->token->access_token,
-            'key' => $developerKey
+            'max-results' => $params['perPage']
         );
 
-        $url = 'https://gdata.youtube.com/feeds/api/users/default/uploads?v=2&'.http_build_query($query);           
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1); 
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-                'Authorization:Bearer '.$this->provider->token->access_token,
-                'Content-Type:application/atom+xml',
-                'X-GData-Key:key='.$developerKey
-            ));
-
-        $result = curl_exec($curl);
-        curl_close ($curl);
-
-        //var_dump($result);
-        $xml_obj = simplexml_load_string($result);   
+        $r = $this->apiCall('users/default/uploads', $query);
     
-        $videos = array();
-        
-        foreach($xml_obj->entry as $v)
-        {
-            $video = new Video();
-            $video->instantiate($v);
-
-            array_push($videos, $video);
-        }
-
-        return $videos;
+        return $this->extractVideos($r);
     }
 
     // --------------------------------------------------------------------
@@ -191,45 +132,16 @@ class Service extends AbstractService
             return NULL;
         }
 
-        $developerKey = $this->provider->developerKey;
 
         $query = array(
             'q' => $params['q'],
             'start-index' => $params['page'],
             'max-results' => $params['perPage'],
-            'access_token' => $this->provider->token->access_token,
-            'key' => $developerKey
         );
 
-        $url = 'http://gdata.youtube.com/feeds/api/videos?v=2&'.http_build_query($query);           
+        $r = $this->apiCall('videos', $query);
 
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1); 
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-                'Authorization:Bearer '.$this->provider->token->access_token,
-                'Content-Type:application/atom+xml',
-                'X-GData-Key:key='.$developerKey
-            ));
-
-        $result = curl_exec($curl);
-        curl_close ($curl);
-
-        //var_dump($result);
-        $xml_obj = simplexml_load_string($result);   
-    
-        $videos = array();
-        
-        foreach($xml_obj->entry as $v)
-        {
-            $video = new Video();
-            $video->instantiate($v);
-
-            array_push($videos, $video);
-        }
-
-
-        return $videos;
+        return $this->extractVideos($r);
     }
 
     // --------------------------------------------------------------------
@@ -275,5 +187,51 @@ class Service extends AbstractService
     public function setProvider(\OAuth\Provider\YouTube $provider)
     {
         $this->provider = $provider;
-    }    
+    }
+
+    // --------------------------------------------------------------------
+
+    private function apiCall($url, $params = array())
+    {
+        $developerKey = $this->provider->developerKey;
+
+        $params['access_token'] = $this->provider->token->access_token;
+        $params['key'] = $developerKey;
+
+        $url = 'https://gdata.youtube.com/feeds/api/'.$url.'?v=2&'.http_build_query($params);
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1); 
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+                'Authorization:Bearer '.$this->provider->token->access_token,
+                'Content-Type:application/atom+xml',
+                'X-GData-Key:key='.$developerKey
+            ));
+
+        $result = curl_exec($curl);
+        curl_close ($curl);
+
+        //var_dump($result);
+        $xml_obj = simplexml_load_string($result); 
+
+        return $xml_obj;
+    }
+
+    // --------------------------------------------------------------------
+
+    private function extractVideos($r)
+    {
+        $videos = array();
+        
+        foreach($r->entry as $v)
+        {
+            $video = new Video();
+            $video->instantiate($v);
+
+            array_push($videos, $video);
+        }
+
+        return $videos;
+    }
 }

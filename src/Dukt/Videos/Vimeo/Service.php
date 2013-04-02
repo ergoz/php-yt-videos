@@ -10,11 +10,14 @@ class Service extends AbstractService
 {
     protected $providerClass = "Vimeo";
 
+    // --------------------------------------------------------------------
+
     public function getName()
     {
         return 'Vimeo';
     }
 
+    // --------------------------------------------------------------------
 
     public function getVideo($opts)
     {
@@ -24,22 +27,14 @@ class Service extends AbstractService
             return NULL;
         }
 
-
-        $consumer_key = $this->provider->consumer->client_id;
-        $consumer_secret = $this->provider->consumer->secret;
-
-        $token = $this->provider->token->access_token;
-        $token_secret = $this->provider->token->secret;
-
-        $vimeo = new Vimeo($consumer_key, $consumer_secret);
-        $vimeo->setToken($token, $token_secret);
+        $api = $this->api();
         
         $method = 'vimeo.videos.getInfo';
 
         $params = array();
         $params['video_id'] = $opts['id'];
 
-        $r = $vimeo->call($method, $params);
+        $r = $api->call($method, $params);
 
         $video = $r->video;
 
@@ -49,6 +44,8 @@ class Service extends AbstractService
         return $video;
     }
 
+    // --------------------------------------------------------------------
+
     public function getFavorites($params)
     {
         // authentication required
@@ -57,14 +54,7 @@ class Service extends AbstractService
             return NULL;
         }
 
-        $consumer_key = $this->provider->consumer->client_id;
-        $consumer_secret = $this->provider->consumer->secret;
-
-        $token = $this->provider->token->access_token;
-        $token_secret = $this->provider->token->secret;
-
-        $vimeo = new Vimeo($consumer_key, $consumer_secret);
-        $vimeo->setToken($token, $token_secret);
+        $api = $this->api();
         
         $method = 'vimeo.videos.getLikes';
 
@@ -73,23 +63,12 @@ class Service extends AbstractService
         $query['page'] = $params['page'];
         $query['per_page'] = $params['perPage'];
 
-        $r = $vimeo->call($method, $query);
+        $r = $api->call($method, $query);
 
-        $responseVideos = $r->videos->video;
-
-        $videos = array();
-
-
-        foreach($responseVideos as $responseVideo)
-        {
-            $video = new Video();
-            $video->instantiate($responseVideo);
-
-            array_push($videos, $video);
-        }
-
-        return $videos;        
+        return $this->extractVideos($r);      
     }
+
+    // --------------------------------------------------------------------
 
     public function getUploads($params = array())
     {
@@ -99,14 +78,7 @@ class Service extends AbstractService
             return NULL;
         }
 
-        $consumer_key = $this->provider->consumer->client_id;
-        $consumer_secret = $this->provider->consumer->secret;
-
-        $token = $this->provider->token->access_token;
-        $token_secret = $this->provider->token->secret;
-
-        $vimeo = new Vimeo($consumer_key, $consumer_secret);
-        $vimeo->setToken($token, $token_secret);
+        $api = $this->api();
         
         $method = 'vimeo.videos.getUploaded';
 
@@ -115,24 +87,13 @@ class Service extends AbstractService
         $query['page'] = $params['page'];
         $query['per_page'] = $params['perPage'];
 
-        $r = $vimeo->call($method, $query);
+        $r = $api->call($method, $query);
 
-        $responseVideos = $r->videos->video;
-
-        $videos = array();
-
-
-        foreach($responseVideos as $responseVideo)
-        {
-            $video = new Video();
-            $video->instantiate($responseVideo);
-
-            array_push($videos, $video);
-        }
-
-        return $videos;        
+        return $this->extractVideos($r);       
     }
-
+    
+    // --------------------------------------------------------------------
+    
     public function search($params = array())
     {
         // authentication required
@@ -141,14 +102,7 @@ class Service extends AbstractService
             return NULL;
         }
 
-        $consumer_key = $this->provider->consumer->client_id;
-        $consumer_secret = $this->provider->consumer->secret;
-
-        $token = $this->provider->token->access_token;
-        $token_secret = $this->provider->token->secret;
-
-        $vimeo = new Vimeo($consumer_key, $consumer_secret);
-        $vimeo->setToken($token, $token_secret);
+        $api = $this->api();
         
         $method = 'vimeo.videos.search';
 
@@ -158,23 +112,12 @@ class Service extends AbstractService
         $query['per_page'] = $params['perPage'];
         $query['query'] = $params['q'];
 
-        $r = $vimeo->call($method, $query);
+        $r = $api->call($method, $query);
 
-        $responseVideos = $r->videos->video;
-
-        $videos = array();
-
-
-        foreach($responseVideos as $responseVideo)
-        {
-            $video = new Video();
-            $video->instantiate($responseVideo);
-
-            array_push($videos, $video);
-        }
-
-        return $videos;        
+        return $this->extractVideos($r);   
     }
+
+    // --------------------------------------------------------------------
 
     public function getUserInfos()
     {
@@ -184,35 +127,27 @@ class Service extends AbstractService
             return NULL;
         }
 
-
-        $consumer_key = $this->provider->consumer->client_id;
-        $consumer_secret = $this->provider->consumer->secret;
-
-        $token = $this->provider->token->access_token;
-        $token_secret = $this->provider->token->secret;
-
-        $vimeo = new Vimeo($consumer_key, $consumer_secret);
-        $vimeo->setToken($token, $token_secret);
-
+        $api = $this->api();
         
         $method = 'vimeo.people.getInfo';
 
         $params = array();
 
-        $r = $vimeo->call($method, $params);
-
+        $r = $api->call($method, $params);
 
         return $r;
     }
+
+    // --------------------------------------------------------------------
 
     public function getVideoId($url)
     {
 
         // check if url works with this service and extract video_id
+
         $video_id = false;
 
         $regexp = array('/^https?:\/\/(www\.)?vimeo\.com\/([0-9]*)/', 2);
-
 
         if(preg_match($regexp[0], $url, $matches, PREG_OFFSET_CAPTURE) > 0)
         {
@@ -240,14 +175,52 @@ class Service extends AbstractService
         return $video_id;
     }
     
+    // --------------------------------------------------------------------
+
     public function setProvider(\OAuth\Provider\Vimeo $provider)
     {
         $this->provider = $provider;
     }
 
+    // --------------------------------------------------------------------
+
     public function metadata($video_id)
     {
 
     }
-    
+
+    // --------------------------------------------------------------------
+
+    private function api()
+    {
+        $consumer_key = $this->provider->consumer->client_id;
+        $consumer_secret = $this->provider->consumer->secret;
+
+        $token = $this->provider->token->access_token;
+        $token_secret = $this->provider->token->secret;
+
+        $vimeo = new Vimeo($consumer_key, $consumer_secret);
+        $vimeo->setToken($token, $token_secret);
+
+        return $vimeo;
+    }
+
+    // --------------------------------------------------------------------
+
+    private function extractVideos($r)
+    {
+        $responseVideos = $r->videos->video;
+
+        $videos = array();
+
+        foreach($responseVideos as $responseVideo)
+        {
+            $video = new Video();
+            $video->instantiate($responseVideo);
+
+            array_push($videos, $video);
+        }
+
+        return $videos;
+    }
 }
