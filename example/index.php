@@ -245,6 +245,28 @@ $app->post('/services/{name}/getFavorites', function($name) use ($app) {
     return appPost($name, $app, 'getFavorites', 'responseCollection.twig');
 });
 
+// create service addFavorite
+$app->get('/services/{name}/addFavorite', function($name) use ($app) {
+    return appGet($name, $app, 'addFavorite');
+});
+
+
+// post service addFavorite
+$app->post('/services/{name}/addFavorite', function($name) use ($app) {
+    return appPost($name, $app, 'addFavorite', 'responseCollection.twig');
+});
+
+// create service removeFavorite
+$app->get('/services/{name}/removeFavorite', function($name) use ($app) {
+    return appGet($name, $app, 'removeFavorite');
+});
+
+
+// post service removeFavorite
+$app->post('/services/{name}/removeFavorite', function($name) use ($app) {
+    return appPost($name, $app, 'removeFavorite', 'responseCollection.twig');
+});
+
 
 // create service getUploads
 $app->get('/services/{name}/getUploads', function($name) use ($app) {

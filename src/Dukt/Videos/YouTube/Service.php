@@ -81,6 +81,72 @@ class Service extends AbstractService
         return $video;
     }
 
+    
+    // --------------------------------------------------------------------
+    
+    /**
+     * Add favorite
+     *
+     * @access  public
+     * @param   string
+     * @return  void
+     */
+    function addFavorite($params)
+    {
+        // authentication required
+        
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $query = '<?xml version="1.0" encoding="UTF-8"?><entry xmlns="http://www.w3.org/2005/Atom"><id>'.$params['id'].'</id></entry>';
+
+
+        $r = $this->apiCall('users/default/favorites', $query, 'post');
+    }
+    
+    // --------------------------------------------------------------------
+    
+    /**
+     * Remove favorite
+     *
+     * @access  public
+     * @param   string
+     * @return  void
+     */
+    function removeFavorite($params)
+    {
+        // authentication required
+        
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        // get favorites
+
+        $r = $this->apiCall('users/default/favorites');
+        
+        foreach($r->entry as $v)
+        {
+            $video = new Video();
+            $video->instantiate($v);
+
+            if($video->id == $params['id'])
+            {
+                // favorite found, let's remove it
+
+                $yt = $v->children('http://gdata.youtube.com/schemas/2007');
+
+                $favorite_id = (string) $yt->favoriteId;
+
+                $query = '';
+
+                $r = $this->apiCall('users/default/favorites/'.$favorite_id, $query, 'delete');
+
+            }
+        }
+    }
+
     // --------------------------------------------------------------------
 
     public function getFavorites($params = array())
@@ -196,14 +262,24 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
-    private function apiCall($url, $params = array())
+    private function apiCall($url, $params = array(), $method='get')
     {
         $developerKey = $this->provider->developerKey;
 
-        $params['access_token'] = $this->provider->token->access_token;
-        $params['key'] = $developerKey;
+        if(is_array($params))
+        {
+            $params['access_token'] = $this->provider->token->access_token;
+            $params['key'] = $developerKey;
+            $params['v'] = 2;
+        }
 
-        $url = 'https://gdata.youtube.com/feeds/api/'.$url.'?v=2&'.http_build_query($params);
+
+        $url = 'https://gdata.youtube.com/feeds/api/'.$url;
+
+        if($method=="get")
+        {
+            $url .= '?'.http_build_query($params);
+        }
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -213,6 +289,17 @@ class Service extends AbstractService
                 'Content-Type:application/atom+xml',
                 'X-GData-Key:key='.$developerKey
             ));
+        
+        if($method=="post")
+        {
+            curl_setopt ($curl, CURLOPT_POST, true);
+            curl_setopt ($curl, CURLOPT_POSTFIELDS, $params);
+        }
+
+        if($method=='delete')
+        {
+            curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        }
 
         $result = curl_exec($curl);
         $curlInfo = curl_getinfo($curl);

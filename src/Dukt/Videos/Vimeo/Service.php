@@ -222,6 +222,61 @@ class Service extends AbstractService
 
         return false;
     }
+
+    // --------------------------------------------------------------------
+
+    /**
+     * Add favorite
+     *
+     * @access  public
+     * @param   string
+     * @return  void
+     */
+    public function addFavorite($params)
+    {
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $api = $this->api();
+        
+        $method = 'vimeo.videos.setLike';
+
+        $params['video_id'] = $params['id'];
+        $params['like'] = 1;
+
+        $r = $api->call($method, $params);
+    }
+    
+    // --------------------------------------------------------------------
+
+    /**
+     * Remove favorite
+     *
+     * @access  public
+     * @param   string
+     * @return  void
+     */
+    public function removeFavorite($params)
+    {
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $api = $this->api();
+        
+        $method = 'vimeo.videos.setLike';
+
+        $params['video_id'] = $params['id'];
+        $params['like'] = 0;
+
+        $r = $api->call($method, $params);
+    }
+
     // --------------------------------------------------------------------
 
     private function api()

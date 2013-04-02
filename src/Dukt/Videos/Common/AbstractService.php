@@ -40,6 +40,8 @@ abstract class AbstractService implements ServiceInterface
             break;
 
             case "isFavorite":
+            case "addFavorite":
+            case "removeFavorite":
             $array = array('id' => "");
             break;
         }
