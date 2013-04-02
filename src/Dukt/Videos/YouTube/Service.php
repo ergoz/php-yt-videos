@@ -91,10 +91,15 @@ class Service extends AbstractService
             return NULL;
         }
 
-        $query = array(
-            'start-index' => $params['page'],
-            'max-results' => $params['perPage'],
-        );
+        $query = array();
+
+        if(isset($params['page']) && isset($params['perPage']))
+        {
+            $query = array(
+                'start-index' => $params['page'],
+                'max-results' => $params['perPage'],
+            );
+        }
 
         $r = $this->apiCall('users/default/favorites', $query);
         
@@ -146,7 +151,7 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
-    public function getVideoId($url)
+    public static function getVideoId($url)
     {
         // check if url works with this service and extract video_id
         
@@ -210,9 +215,19 @@ class Service extends AbstractService
             ));
 
         $result = curl_exec($curl);
+        $curlInfo = curl_getinfo($curl);
         curl_close ($curl);
 
-        //var_dump($result);
+
+        if($curlInfo['http_code'] == 401 && strpos($result, "Token invalid") !== false)
+        {
+            // refresh token
+            // $providerParams = array('grant_type' => 'refresh_token');
+            // $code = $provider
+            // $this->provider->access($code, $providerParams);
+            // var_dump($this->provider);
+        }
+
         $xml_obj = simplexml_load_string($result); 
 
         return $xml_obj;

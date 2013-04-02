@@ -60,8 +60,16 @@ class Service extends AbstractService
 
         $query = array();
         $query['full_response'] = 1;
-        $query['page'] = $params['page'];
-        $query['per_page'] = $params['perPage'];
+
+        if(isset($params['page']))
+        {
+            $query['page'] = $params['page'];    
+        }
+
+        if(isset($params['perPage']))
+        {
+            $query['per_page'] = $params['perPage'];
+        }
 
         $r = $api->call($method, $query);
 
@@ -140,7 +148,7 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
-    public function getVideoId($url)
+    public static function getVideoId($url)
     {
 
         // check if url works with this service and extract video_id
@@ -188,7 +196,33 @@ class Service extends AbstractService
     {
 
     }
+    
+    // --------------------------------------------------------------------
 
+    function isFavorite($id)
+    {
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $api = $this->api();
+        
+        $method = 'vimeo.videos.getInfo';
+
+        $params = array();
+        $params['video_id'] = $id;
+
+        $r = $api->call($method, $params);
+
+        if($r->video[0]->is_like == 1)
+        {
+            return true;
+        }
+
+        return false;
+    }
     // --------------------------------------------------------------------
 
     private function api()

@@ -38,6 +38,10 @@ abstract class AbstractService implements ServiceInterface
             case "getUploads":
             $array = array('page' => 1, 'perPage' => 20);
             break;
+
+            case "isFavorite":
+            $array = array('id' => "");
+            break;
         }
 
         return $array;

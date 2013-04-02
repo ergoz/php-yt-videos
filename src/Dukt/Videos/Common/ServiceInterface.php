@@ -8,7 +8,7 @@ namespace Dukt\Videos\Common;
 interface ServiceInterface
 {
     public function getUserInfos();
-    public function getVideoId($url);
+    public static function getVideoId($url);
     public function getVideo($options);
 
     // public function connect($lib, $app);

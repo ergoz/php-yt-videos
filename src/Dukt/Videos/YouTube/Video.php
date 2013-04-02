@@ -6,14 +6,15 @@ use Dukt\Videos\Common\AbstractVideo;
 
 class Video extends AbstractVideo
 {
-    var $embedUrl =  "http://www.youtube.com/embed/%s?wmode=transparent";
+    protected $embedUrl =  "http://www.youtube.com/embed/%s?wmode=transparent";
     
     public function instantiate($xml)
     {
         // extract videoId
 
-        $videoId = substr($xml->id, strrpos($xml->id, ":") + 1);
+        $videoUrl = (string) $xml->link[0]->attributes()->href[0];
 
+        $videoId = Service::getVideoId($videoUrl);
 
         $yt = $xml->children('http://gdata.youtube.com/schemas/2007');
         $media = $xml->children('http://search.yahoo.com/mrss/');
@@ -58,5 +59,29 @@ class Video extends AbstractVideo
         $this->plays = (int) $statistics_view_count;
         $this->duration = (int) $yt->duration->attributes();
 
+    }
+
+
+    function isFavorite($id)
+    {
+        $params = array();
+
+        $videos = $this->getFavorites($params);
+        
+        if(!$videos)
+        {
+            return false;
+        }
+        
+        foreach($videos as $v)
+        {
+
+            if($v->id == $id)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
