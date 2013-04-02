@@ -249,4 +249,25 @@ class Service extends AbstractService
 
         return $videos;
     }
+
+
+    function isFavorite($params)
+    {
+        $videos = $this->getFavorites($params);
+        
+        if(!$videos)
+        {
+            return false;
+        }
+
+        foreach($videos as $v)
+        {
+            if($v->id == $params['id'])
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

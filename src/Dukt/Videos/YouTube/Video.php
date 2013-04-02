@@ -60,28 +60,4 @@ class Video extends AbstractVideo
         $this->duration = (int) $yt->duration->attributes();
 
     }
-
-
-    function isFavorite($id)
-    {
-        $params = array();
-
-        $videos = $this->getFavorites($params);
-        
-        if(!$videos)
-        {
-            return false;
-        }
-        
-        foreach($videos as $v)
-        {
-
-            if($v->id == $id)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }

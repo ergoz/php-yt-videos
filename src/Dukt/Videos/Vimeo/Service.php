@@ -199,7 +199,7 @@ class Service extends AbstractService
     
     // --------------------------------------------------------------------
 
-    function isFavorite($id)
+    function isFavorite($params)
     {
         // authentication required
 
@@ -211,8 +211,7 @@ class Service extends AbstractService
         
         $method = 'vimeo.videos.getInfo';
 
-        $params = array();
-        $params['video_id'] = $id;
+        $params['video_id'] = $params['id'];
 
         $r = $api->call($method, $params);
 
