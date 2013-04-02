@@ -26,6 +26,66 @@ $app->get('/', function() use ($app) {
     ));
 });
 
+
+$app->get('/tests/unauthenticated', function() use ($app) {
+
+    $service = \Dukt\Videos\Common\ServiceFactory::create('YouTube');
+
+    $url = "http://www.youtube.com/watch?v=0ZUvQ5h-TCA";
+
+    $videoId = $service->getUserInfos($url);
+
+    if($videoId) {
+        ?>
+        <h1>Videos Infos</h1>
+        <ul>
+            <li>url : <?php echo $url?></li>
+            <li>videoId : <?php echo $videoId?></li>
+        </ul>
+        <?php
+    }
+    else
+    {
+        ?>
+        <h1>Error</h1>
+        <p>Invalid Video URL</p>
+        <?php
+    }
+    
+    die();
+});
+
+$app->get('/tests/embed', function() use ($app) {
+
+    $id = "0ZUvQ5h-TCA";
+    $id = "JtawDJtcRg8";
+    $url = "http://www.youtube.com/watch?v=".$id;
+
+    $service = \Dukt\Videos\Common\ServiceFactory::create('YouTube');
+    $videoObj = new \Dukt\Videos\YouTube\Video(array('id' => $id));
+    $videoObj->id = $id;
+
+    $options = array(
+        'width' => 500,
+        'height' => 300,
+        'autoplay' => 1
+    );
+
+    $video = $videoObj->getEmbed($options);
+
+    if($video) {
+        var_dump(($video));
+    }
+    else
+    {
+        ?>
+        <h1>Error</h1>
+        <?php
+    }
+    
+    die();
+});
+
 // service settings
 $app->get('/services/{name}', function($name) use ($app) {
     $service = Dukt\Videos\Common\ServiceFactory::create($name);
