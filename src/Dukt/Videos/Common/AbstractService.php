@@ -31,7 +31,7 @@ abstract class AbstractService implements ServiceInterface
             'addFavorite'         => array('id' => ""),
             'removeFavorite'      => array('id' => ""),
             'playlistAddVideo'    => array('collectionId' => "", 'videoId' => ""),
-            'playlistRemoveVideo' => array('collectionId' => "", 'videoId' => ""),
+            'playlistRemoveVideo' => array('collectionId' => "", 'videoId' => "", 'collectionEntryId' => ""),
         );
 
         $array = array();

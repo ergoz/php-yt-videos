@@ -13,6 +13,24 @@ class Video extends AbstractVideo
         // extract videoId
 
         $videoUrl = (string) $xml->link[0]->attributes()->href[0];
+        
+        $this->systemId = (string) $xml->id;
+
+        $playlistEntryId = $this->systemId;
+
+        $playlistEntryId = substr($playlistEntryId, strpos($playlistEntryId, 'playlist:') + 9);
+
+        if(strpos($playlistEntryId, ":"))
+        {
+            $playlistEntryId = substr($playlistEntryId, strpos($playlistEntryId, ':') + 1);
+            $this->playlistEntryId = $playlistEntryId;
+        }
+        else
+        {
+            $playlistEntryId = NULL;
+        }
+
+        
 
         $videoId = Service::getVideoId($videoUrl);
 
@@ -57,7 +75,8 @@ class Video extends AbstractVideo
         $this->title = (string) $xml->title;
         $this->description = (string) $media->group->description[0];
         $this->plays = (int) $statistics_view_count;
-        $this->duration = (int) $yt->duration->attributes();
+
+        //$this->duration = (int) $duration;
 
     }
 }

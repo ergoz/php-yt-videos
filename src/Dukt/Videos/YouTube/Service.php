@@ -258,9 +258,9 @@ class Service extends AbstractService
 
         $r = $this->apiCall('playlists/'.$params['id'], $query);
 
-        return $this->extractCollections($r);
+        return $this->extractVideos($r);
         
-        //return $r;
+        // return $r;
     }
 
     // --------------------------------------------------------------------
@@ -325,6 +325,25 @@ class Service extends AbstractService
 
         $r = $this->apiCall('playlists/'.$params['collectionId'], $query, 'post');
 
+        return $r;
+    }
+
+
+    // --------------------------------------------------------------------
+
+    public function playlistRemoveVideo($params = array())
+    {
+        // authentication required
+        
+        if(!$this->provider) {
+            return NULL;
+        }
+
+
+        $query = array();
+
+        $r = $this->apiCall('playlists/'.$params['collectionId'].'/'.$params['collectionEntryId'], $query, 'delete');
+        
         return $r;
     }
 
