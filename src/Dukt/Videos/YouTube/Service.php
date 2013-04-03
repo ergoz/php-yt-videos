@@ -29,7 +29,7 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
-    public function getUserInfos()
+    public function userInfos()
     {
         // authentication required
 
@@ -60,7 +60,7 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
-    public function getVideo($opts)
+    public function video($opts)
     {
         // authentication required
         
@@ -91,7 +91,7 @@ class Service extends AbstractService
      * @param   string
      * @return  void
      */
-    function addFavorite($params)
+    function favoriteAdd($params)
     {
         // authentication required
         
@@ -114,7 +114,7 @@ class Service extends AbstractService
      * @param   string
      * @return  void
      */
-    function removeFavorite($params)
+    function favoriteRemove($params)
     {
         // authentication required
         
@@ -149,7 +149,7 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
-    public function getFavorites($params = array())
+    public function favorites($params = array())
     {
         // authentication required
         
@@ -174,7 +174,7 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
-    public function getUploads($params = array())
+    public function uploads($params = array())
     {
         // authentication required
         

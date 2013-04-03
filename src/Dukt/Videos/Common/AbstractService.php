@@ -21,15 +21,15 @@ abstract class AbstractService implements ServiceInterface
     {
         $defaults = array(
             'search'              => array('q' => "", 'page' => 1, 'perPage' => 20),
-            'getFavorites'        => array('page' => 1, 'perPage' => 20),
-            'getUploads'          => array('page' => 1, 'perPage' => 20),
+            'favorites'        => array('page' => 1, 'perPage' => 20),
+            'isFavorite'          => array('id' => ""),
+            'favoriteAdd'         => array('id' => ""),
+            'favoriteRemove'      => array('id' => ""),
+            'uploads'          => array('page' => 1, 'perPage' => 20),
             'playlist'            => array('id' => "", 'page' => 1, 'perPage' => 20),
             'playlistCreate'      => array('title' => "", 'description' => "", 'videoId' => ""),
             'playlistDelete'      => array('id' => ""),
-            'getVideo'            => array('id' => ""),
-            'isFavorite'          => array('id' => ""),
-            'addFavorite'         => array('id' => ""),
-            'removeFavorite'      => array('id' => ""),
+            'video'            => array('id' => ""),
             'playlistAddVideo'    => array('collectionId' => "", 'videoId' => ""),
             'playlistRemoveVideo' => array('collectionId' => "", 'videoId' => "", 'collectionEntryId' => ""),
         );

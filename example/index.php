@@ -196,16 +196,16 @@ $app->get('/services/{name}/authorize', function($name) use ($app) {
 // create pages
 
 $pages = array(
-    'getUserInfos'        => 'response.twig',
-    'getVideo'            => 'responseVideo.twig',
+    'userInfos'           => 'response.twig',
+    'video'               => 'responseVideo.twig',
     'search'              => 'responseCollection.twig',
-    'getUploads'          => 'responseCollection.twig',
-
-    'removeFavorite'      => 'response.twig',
-    'addFavorite'         => 'response.twig',
-    'getFavorites'        => 'responseCollection.twig',
+    'uploads'             => 'responseCollection.twig',
+    
+    'favoriteAdd'         => 'response.twig',
+    'favoriteRemove'      => 'response.twig',
+    'favorites'           => 'responseCollection.twig',
     'isFavorite'          => 'response.twig',
-
+    
     'playlists'           => 'responseCollection.twig',
     'playlist'            => 'responseCollection.twig',
     'playlistCreate'      => 'response.twig',

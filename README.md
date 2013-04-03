@@ -61,11 +61,26 @@ else
 
 The main methods implemented by video services are:
 
-* `getFavorites()` - Get favorite videos
-* `getUploads()` - Get upload videos
-* `getUserInfos()` - Get user informations
-* `getVideo($id)` - Get video from its ID
-* `getVideoFromUrl($id)` - Get video from its URL
+* `video($params)` - Get video from its ID
+* `search($params)` - Search videos
+* `uploads($params)` - Get uploaded videos
+* `userInfos($params)` - Get current user infos
+
+### Favorites
+
+* `favorites($params)` - Get favorite videos
+* `favoriteAdd($params)` - Add video to favorites
+* `favoriteRemove($params)` - Remove Video from favorites
+* `isFavorite($params)` - Checks if a video is a favorite
+
+### Playlists
+
+* `playlists($params)` - Get playlists
+* `playlist($params)` - Get videos for given playlist
+* `playlistCreate($params)` - Create a playlist
+* `playlistDelete($params)` - Delete a playlist
+* `playlistAddVideo($params)` - Add a video to a playlist
+* `playlistRemoveVideo($params)` - Remove a video from a playlist
 
 ## Video Methods
 
