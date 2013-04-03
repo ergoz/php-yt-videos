@@ -304,6 +304,30 @@ class Service extends AbstractService
         return $r;
     }
 
+    // --------------------------------------------------------------------
+
+    public function playlistAddVideo($params = array())
+    {
+
+        // authentication required
+        
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $query = '<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns="http://www.w3.org/2005/Atom"
+    xmlns:yt="http://gdata.youtube.com/schemas/2007">
+  <id>'.$params['videoId'].'</id>
+  <yt:position>1</yt:position>
+</entry>';
+
+
+        $r = $this->apiCall('playlists/'.$params['collectionId'], $query, 'post');
+
+        return $r;
+    }
+
 
     // --------------------------------------------------------------------
 
