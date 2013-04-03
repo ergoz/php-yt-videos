@@ -242,6 +242,29 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
+    public function playlist($params = array())
+    {
+        // authentication required
+        
+        if(!$this->provider) {
+            return NULL;
+        }
+
+
+        $query = array(
+            'start-index' => $params['page'],
+            'max-results' => $params['perPage'],
+        );
+
+        $r = $this->apiCall('playlists/'.$params['id'], $query);
+
+        return $this->extractCollections($r);
+        
+        //return $r;
+    }
+
+    // --------------------------------------------------------------------
+
     public static function getVideoId($url)
     {
         // check if url works with this service and extract video_id
