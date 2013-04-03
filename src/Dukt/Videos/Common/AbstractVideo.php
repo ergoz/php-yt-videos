@@ -8,14 +8,99 @@ abstract class AbstractVideo implements VideoInterface
 {
     public $id;
     public $url;
-    public $title;
+    public $service;
+    public $date;
     public $plays;
     public $duration;
+    public $authorName;
+    public $authorUrl;
+    public $authorUsername;
+    public $thumbnail;
+    public $thumbnailLarge;
+    public $thumbnails;
+    public $title;
     public $description;
 
-    public function getTitle()
+
+    public function getDate($format = false)
     {
-        return $this->title;
+        if($format)
+        {
+            return strftime($format, $this->date);
+        }
+        return $this->date;
+    }
+
+
+    public function getAuthorName()
+    {
+        return $this->authorName;
+    }
+    public function getAuthorUrl()
+    {
+        return $this->authorUrl;
+    }
+
+    public function getAuthorUsername()
+    {
+        return $this->authorUsername;
+    }
+
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
+    }
+    public function getThumbnailLarge()
+    {
+        return $this->thumbnailLarge;
+    }
+    public function getThumbnails()
+    {
+        return $this->thumbnails;
+    }
+
+    // ------------------------------------------------------------------------------
+    
+    /**
+     * Duration from seconds to h:m:s
+     *
+     * @access  public
+     * @return  array
+     */
+    public function getDuration($format = false)
+    {
+        $sec = $this->duration;
+        $padHours = true;
+
+        $hms = "";
+        $hours = intval(intval($sec) / 3600); 
+        
+        $hms .= ($padHours) 
+        ? str_pad($hours, 2, "0", STR_PAD_LEFT). ":"
+        : $hours. ":";
+        
+        $minutes = intval(($sec / 60) % 60); 
+        
+        $hms .= str_pad($minutes, 2, "0", STR_PAD_LEFT). ":";
+        
+        $seconds = intval($sec % 60); 
+        
+        $hms .= str_pad($seconds, 2, "0", STR_PAD_LEFT);
+
+        if($format)
+        {
+            $r = $format;
+
+            $r = str_replace("%h", str_pad($hours, 2, 0, STR_PAD_LEFT), $r);
+            $r = str_replace("%m", str_pad($minutes, 2, 0, STR_PAD_LEFT), $r);
+            $r = str_replace("%s", str_pad($seconds, 2, 0, STR_PAD_LEFT), $r);
+        }
+        else
+        {
+            $r = $this->duration;
+        }
+        
+        return $r;
     }
 
     public function getEmbed($options = array())

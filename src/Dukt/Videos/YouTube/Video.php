@@ -68,15 +68,37 @@ class Video extends AbstractVideo
         $author = $xml->author;
 
         // ----------
+        
+        // basics
 
-        $this->id = (string) $videoId;
-        $this->url = 'http://youtu.be/'.$videoId;
+        $this->id              = (string) $videoId;
+        $this->url             = 'http://youtu.be/'.$videoId;
+        $this->service         = "YouTube";
+        $this->date            = strtotime($xml->published);
+        $this->plays           = (int) $statistics_view_count;
+        $this->duration        = (int) $duration;
 
-        $this->title = (string) $xml->title;
-        $this->description = (string) $media->group->description[0];
-        $this->plays = (int) $statistics_view_count;
 
-        //$this->duration = (int) $duration;
+        // author
 
+        $this->authorName      = (string) $author->name;
+        $this->authorUrl       = "http://youtube.com/user/".$author->name;
+        $this->authorUsername  = (string) $author->name;
+        
+
+        // thumbnails
+
+        $this->thumbnail       = (string) $media->group->thumbnail[1]->attributes();
+        $this->thumbnailLarge  = (string) $media->group->thumbnail[0]->attributes();
+
+        $this->thumbnails = array(
+                (string) $media->group->thumbnail[0]->attributes(),
+                (string) $media->group->thumbnail[1]->attributes(),
+                (string) $media->group->thumbnail[2]->attributes(),
+                (string) $media->group->thumbnail[3]->attributes(),
+            );
+
+        $this->title           = (string) $xml->title;
+        $this->description     = (string) $media->group->description[0];
     }
 }
