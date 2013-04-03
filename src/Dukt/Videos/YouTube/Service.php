@@ -215,6 +215,31 @@ class Service extends AbstractService
         return $this->extractVideos($r);
     }
 
+
+    // --------------------------------------------------------------------
+
+    public function playlists($params = array())
+    {
+        // authentication required
+        
+        if(!$this->provider) {
+            return NULL;
+        }
+
+
+        $query = array(
+            'q' => $params['q'],
+            'start-index' => $params['page'],
+            'max-results' => $params['perPage'],
+        );
+
+        $r = $this->apiCall('users/default/playlists', $query);
+
+        return $this->extractCollections($r);
+        
+        //return $r;
+    }
+
     // --------------------------------------------------------------------
 
     public static function getVideoId($url)
@@ -337,6 +362,25 @@ class Service extends AbstractService
         return $videos;
     }
 
+
+    // --------------------------------------------------------------------
+
+    private function extractCollections($r)
+    {
+        $collections = array();
+        
+        foreach($r->entry as $v)
+        {
+            $collection = new Collection();
+            $collection->instantiate($v);
+
+            array_push($collections, $collection);
+        }
+
+        return $collections;
+    }
+
+    // --------------------------------------------------------------------
 
     function isFavorite($params)
     {
