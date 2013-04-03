@@ -19,44 +19,26 @@ abstract class AbstractService implements ServiceInterface
 
     public function requestParameters($method)
     {
+        $defaults = array(
+            'search'              => array('q' => "", 'page' => 1, 'perPage' => 20),
+            'getFavorites'        => array('page' => 1, 'perPage' => 20),
+            'getUploads'          => array('page' => 1, 'perPage' => 20),
+            'playlist'            => array('id' => "", 'page' => 1, 'perPage' => 20),
+            'playlistCreate'      => array('title' => "", 'description' => "", 'videoId' => ""),
+            'playlistDelete'      => array('id' => ""),
+            'getVideo'            => array('id' => ""),
+            'isFavorite'          => array('id' => ""),
+            'addFavorite'         => array('id' => ""),
+            'removeFavorite'      => array('id' => ""),
+            'playlistAddVideo'    => array('collectionId' => "", 'videoId' => ""),
+            'playlistRemoveVideo' => array('collectionId' => "", 'videoId' => ""),
+        );
+
         $array = array();
 
-        switch($method)
+        if(isset($defaults[$method]))
         {
-            case "search":
-            $array = array('q' => "", 'page' => 1, 'perPage' => 20);
-            break;
-
-            case "getFavorites":
-            $array = array('page' => 1, 'perPage' => 20);
-            break;
-
-            case "getUploads":
-            $array = array('page' => 1, 'perPage' => 20);
-            break;
-
-
-            case "playlist":
-            $array = array('id' => "", 'page' => 1, 'perPage' => 20);
-            break;
-
-            case "playlistCreate":
-            $array = array('title' => "", 'description' => "", 'videoId' => "");
-            break;
-
-            case "getVideo":
-            case "isFavorite":
-            case "addFavorite":
-            case "removeFavorite":
-            case "playlistDelete":
-            $array = array('id' => "");
-            break;
-
-
-            case "playlistAddVideo":
-            case "playlistRemoveVideo":
-            $array = array('collectionId' => "", 'videoId' => "");
-            break;
+            $array = $defaults[$method];
         }
 
         return $array;
