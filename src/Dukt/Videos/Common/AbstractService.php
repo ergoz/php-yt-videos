@@ -162,5 +162,9 @@ abstract class AbstractService implements ServiceInterface
         return $this;
     }
 
+    public function supports($method)
+    {
+        return method_exists($this, $method);
+    }
 
 }
