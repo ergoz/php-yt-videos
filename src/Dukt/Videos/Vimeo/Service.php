@@ -73,7 +73,7 @@ class Service extends AbstractService
 
         $r = $api->call($method, $query);
 
-        return $this->extractVideos($r);      
+        return $this->extractVideos($r);     
     }
 
     // --------------------------------------------------------------------
@@ -279,6 +279,155 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
+    public function playlists($params = array())
+    {
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $api = $this->api();
+        
+        $method = 'vimeo.albums.getAll';
+
+        $query = array();
+        $query['full_response'] = 1;
+        $query['page'] = $params['page'];
+        $query['per_page'] = $params['perPage'];
+
+        $r = $api->call($method, $query);
+
+        return $this->extractCollections($r); 
+        //return $r;
+    }
+
+
+    // --------------------------------------------------------------------
+
+    public function playlist($params = array())
+    {
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $api = $this->api();
+        
+        $method = 'vimeo.albums.getVideos';
+
+        $query = array();
+        $query['album_id'] = $params['id'];
+        $query['full_response'] = 1;
+        $query['page'] = $params['page'];
+        $query['per_page'] = $params['perPage'];
+
+        $r = $api->call($method, $query);
+
+        return $this->extractVideos($r); 
+        //return $r;
+    }
+
+
+    // --------------------------------------------------------------------
+
+    public function playlistCreate($params = array())
+    {
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $api = $this->api();
+        
+        $method = 'vimeo.albums.create';
+
+        $query = array();
+        $query['title'] = $params['title'];
+        $query['description'] = $params['description'];
+        $query['video_id'] = $params['videoId'];
+
+        $r = $api->call($method, $query);
+
+        return $r;
+    }
+
+    // --------------------------------------------------------------------
+
+    public function playlistDelete($params = array())
+    {
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $api = $this->api();
+        
+        $method = 'vimeo.albums.delete';
+
+        $query = array();
+        $query['album_id'] = $params['id'];
+
+        $r = $api->call($method, $query);
+
+        return $r;
+    }
+
+
+    // --------------------------------------------------------------------
+
+    public function playlistAddVideo($params = array())
+    {
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $api = $this->api();
+        
+        $method = 'vimeo.albums.addVideo';
+
+        $query = array();
+        $query['album_id'] = $params['collectionId'];
+        $query['video_id'] = $params['videoId'];
+
+        $r = $api->call($method, $query);
+
+        return $r;
+    }
+
+
+    // --------------------------------------------------------------------
+
+    public function playlistRemoveVideo($params = array())
+    {
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $api = $this->api();
+        
+        $method = 'vimeo.albums.removeVideo';
+
+        $query = array();
+        $query['album_id'] = $params['collectionId'];
+        $query['video_id'] = $params['videoId'];
+
+        $r = $api->call($method, $query);
+
+        return $r;
+    }
+
+
+
+    // --------------------------------------------------------------------
+
     private function api()
     {
         $consumer_key = $this->provider->consumer->client_id;
@@ -310,5 +459,25 @@ class Service extends AbstractService
         }
 
         return $videos;
+    }
+
+
+    // --------------------------------------------------------------------
+
+    private function extractCollections($r)
+    {
+        $responseCollections = $r->albums->album;
+
+        $collections = array();
+
+        foreach($responseCollections as $responseCollection)
+        {
+            $collection = new Collection();
+            $collection->instantiate($responseCollection);
+
+            array_push($collections, $collection);
+        }
+
+        return $collections;
     }
 }

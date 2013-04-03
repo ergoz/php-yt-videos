@@ -193,103 +193,55 @@ $app->get('/services/{name}/authorize', function($name) use ($app) {
 });
 
 
+// create pages
+
+$pages = array(
+    'getUserInfos'        => 'response.twig',
+    'getVideo'            => 'responseVideo.twig',
+    'search'              => 'responseCollection.twig',
+    'getUploads'          => 'responseCollection.twig',
+
+    'removeFavorite'      => 'response.twig',
+    'addFavorite'         => 'response.twig',
+    'getFavorites'        => 'responseCollection.twig',
+    'isFavorite'          => 'response.twig',
+
+    'playlists'           => 'responseCollection.twig',
+    'playlist'            => 'responseCollection.twig',
+    'playlistCreate'      => 'response.twig',
+    'playlistDelete'      => 'response.twig',
+    'playlistAddVideo'    => 'response.twig',
+    'playlistRemoveVideo' => 'response.twig',
+
+);
+
+foreach($pages as $page => $view)
+{
+    $app->get('/services/{name}/'.$page, function($name) use ($app, $page, $view) {
+        return appGet($name, $app, $page);
+    });
+
+    $app->post('/services/{name}/'.$page, function($name) use ($app, $page, $view) {
+        return appPost($name, $app, $page, $view);
+    });
+}
+
+
+// let's run our app
+
+$app->run();
 
 
 
-// create service getUserInfos
-$app->get('/services/{name}/getUserInfos', function($name) use ($app) {
-    return appGet($name, $app, 'getUserInfos');
-});
-
-
-// post service getUserInfos
-$app->post('/services/{name}/getUserInfos', function($name) use ($app) {
-    return appPost($name, $app, 'getUserInfos', 'response.twig');
-});
-
-
-// create service getVideo
-$app->get('/services/{name}/getVideo', function($name) use ($app) {
-    return appGet($name, $app, 'getVideo');
-});
-
-
-// post service getVideo
-$app->post('/services/{name}/getVideo', function($name) use ($app) {
-    return appPost($name, $app, 'getVideo', 'responseVideo.twig');
-});
 
 
 
-// create service search
-$app->get('/services/{name}/isFavorite', function($name) use ($app) {
-    return appGet($name, $app, 'isFavorite');
-});
-
-
-// post service search
-$app->post('/services/{name}/isFavorite', function($name) use ($app) {
-    return appPost($name, $app, 'isFavorite', 'responseCollection.twig');
-});
 
 
 
-// create service getFavorites
-$app->get('/services/{name}/getFavorites', function($name) use ($app) {
-    return appGet($name, $app, 'getFavorites');
-});
 
 
-// post service getFavorites
-$app->post('/services/{name}/getFavorites', function($name) use ($app) {
-    return appPost($name, $app, 'getFavorites', 'responseCollection.twig');
-});
 
-// create service addFavorite
-$app->get('/services/{name}/addFavorite', function($name) use ($app) {
-    return appGet($name, $app, 'addFavorite');
-});
-
-
-// post service addFavorite
-$app->post('/services/{name}/addFavorite', function($name) use ($app) {
-    return appPost($name, $app, 'addFavorite', 'responseCollection.twig');
-});
-
-// create service removeFavorite
-$app->get('/services/{name}/removeFavorite', function($name) use ($app) {
-    return appGet($name, $app, 'removeFavorite');
-});
-
-
-// post service removeFavorite
-$app->post('/services/{name}/removeFavorite', function($name) use ($app) {
-    return appPost($name, $app, 'removeFavorite', 'responseCollection.twig');
-});
-
-
-// create service getUploads
-$app->get('/services/{name}/getUploads', function($name) use ($app) {
-    return appGet($name, $app, 'getUploads');
-});
-
-
-// post service getUploads
-$app->post('/services/{name}/getUploads', function($name) use ($app) {
-    return appPost($name, $app, 'getUploads', 'responseCollection.twig');
-});
-
-
-// create service search
-$app->get('/services/{name}/search', function($name) use ($app) {
-    return appGet($name, $app, 'search');
-});
-
-
-// post service search
-$app->post('/services/{name}/search', function($name) use ($app) {
-    return appPost($name, $app, 'search', 'responseCollection.twig');
-});
 
 
 
@@ -353,6 +305,3 @@ function appPost($name, $app, $method, $template)
         'response' => $response,
     ));
 }
-
-
-$app->run();

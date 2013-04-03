@@ -23,10 +23,6 @@ abstract class AbstractService implements ServiceInterface
 
         switch($method)
         {
-            case "getVideo":
-            $array = array('id' => "");
-            break;
-
             case "search":
             $array = array('q' => "", 'page' => 1, 'perPage' => 20);
             break;
@@ -39,10 +35,27 @@ abstract class AbstractService implements ServiceInterface
             $array = array('page' => 1, 'perPage' => 20);
             break;
 
+
+            case "playlist":
+            $array = array('id' => "", 'page' => 1, 'perPage' => 20);
+            break;
+
+            case "playlistCreate":
+            $array = array('title' => "", 'description' => "", 'videoId' => "");
+            break;
+
+            case "getVideo":
             case "isFavorite":
             case "addFavorite":
             case "removeFavorite":
+            case "playlistDelete":
             $array = array('id' => "");
+            break;
+
+
+            case "playlistAddVideo":
+            case "playlistRemoveVideo":
+            $array = array('collectionId' => "", 'videoId' => "");
             break;
         }
 

@@ -42,14 +42,39 @@ $response = $service->initialize($params);</pre>
     <p>Click on a method to generate a test request.</p>
 
     <ul>
-        <li><a href="/services/{{ service.shortName }}/getFavorites">getFavorites()</a></li>
-        <li><a href="/services/{{ service.shortName }}/getUploads">getUploads()</a></li>
-        <li><a href="/services/{{ service.shortName }}/getUserInfos">getUserInfos()</a></li>
+
         <li><a href="/services/{{ service.shortName }}/getVideo">getVideo()</a></li>
-        <li><a href="/services/{{ service.shortName }}/isFavorite">isFavorite()</a></li>
-        <li><a href="/services/{{ service.shortName }}/addFavorite">addFavorite()</a></li>
-        <li><a href="/services/{{ service.shortName }}/removeFavorite">removeFavorite()</a></li>
+
+
         <li><a href="/services/{{ service.shortName }}/search">search()</a></li>
+
+        <li><a href="/services/{{ service.shortName }}/getUploads">uploads()</a></li>
+
+        <li><a href="/services/{{ service.shortName }}/getUserInfos">userInfos()</a></li>
+        
+        
+    </ul>
+
+
+    <h4>Favorites</h4>
+    <ul>
+        
+        <li><a href="/services/{{ service.shortName }}/getFavorites">favorites()</a></li>
+        <li><a href="/services/{{ service.shortName }}/addFavorite">favoriteAdd()</a></li>
+        <li><a href="/services/{{ service.shortName }}/removeFavorite">favoriteRemove()</a></li>
+        <li><a href="/services/{{ service.shortName }}/isFavorite">isFavorite()</a></li>
+    </ul>
+
+    <h4>Playlists</h4>
+
+    <ul>
+
+        <li><a href="/services/{{ service.shortName }}/playlists">playlists()</a></li>
+        <li><a href="/services/{{ service.shortName }}/playlist">playlist()</a></li>
+        <li><a href="/services/{{ service.shortName }}/playlistCreate">playlistCreate()</a></li>
+        <li><a href="/services/{{ service.shortName }}/playlistDelete">playlistDelete()</a></li>
+        <li><a href="/services/{{ service.shortName }}/playlistAddVideo">playlistAddVideo()</a></li>
+        <li><a href="/services/{{ service.shortName }}/playlistRemoveVideo">playlistRemoveVideo()</a></li>
     </ul>
 
 {% endblock %}

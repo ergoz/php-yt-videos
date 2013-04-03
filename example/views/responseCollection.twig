@@ -8,6 +8,11 @@
 {% block content %}
 
 
-<pre>{{ dump(response) }}</pre>
+
+{% for key, row in response %}
+    <pre>{{ dump(row) }}</pre>
+{% endfor %}
+
+
 
 {% endblock %}
