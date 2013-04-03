@@ -286,6 +286,24 @@ class Service extends AbstractService
     }
 
 
+    // --------------------------------------------------------------------
+
+    public function playlistDelete($params = array())
+    {
+        // authentication required
+        
+        if(!$this->provider) {
+            return NULL;
+        }
+
+
+        $query = array();
+
+        $r = $this->apiCall('users/default/playlists/'.$params['id'], $query, 'delete');
+        
+        return $r;
+    }
+
 
     // --------------------------------------------------------------------
 
@@ -387,9 +405,14 @@ class Service extends AbstractService
             // var_dump($this->provider);
         }
 
-        $xml_obj = simplexml_load_string($result); 
+        if($method != 'delete')
+        {
+            $xml_obj = simplexml_load_string($result); 
 
-        return $xml_obj;
+            return $xml_obj;
+        }
+
+        return true;
     }
 
     // --------------------------------------------------------------------
