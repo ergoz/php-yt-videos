@@ -28,7 +28,7 @@ abstract class AbstractService implements ServiceInterface
             'favoriteAdd'         => array('id' => ""),
             'favoriteRemove'      => array('id' => ""),
             'uploads'          => array('page' => 1, 'perPage' => 20),
-            'playlist'            => array('id' => "", 'page' => 1, 'perPage' => 20),
+            'playlistVideos'            => array('id' => "", 'page' => 1, 'perPage' => 20),
             'playlistCreate'      => array('title' => "", 'description' => "", 'videoId' => ""),
             'playlistDelete'      => array('id' => ""),
             'video'            => array('id' => ""),

@@ -77,7 +77,7 @@ $response = $service->initialize($params);</pre>
 
     <h4>Playlists</h4>
     <ul>
-        {% for key in ["playlists", "playlist", "playlistCreate", "playlistDelete", "playlistAddVideo", "playlistRemoveVideo"] %}
+        {% for key in ["playlists", "playlistVideos", "playlistCreate", "playlistDelete", "playlistAddVideo", "playlistRemoveVideo"] %}
             {% if service.supports(key) %}
                 <li><a href="/services/{{ service.shortName }}/{{key}}">{{key}}()</a></li>
             {% endif %}

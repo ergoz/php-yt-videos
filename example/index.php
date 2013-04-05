@@ -207,7 +207,7 @@ $pages = array(
     'isFavorite'          => 'response.twig',
     
     'playlists'           => 'responseCollection.twig',
-    'playlist'            => 'responseCollection.twig',
+    'playlistVideos'      => 'responseCollection.twig',
     'playlistCreate'      => 'response.twig',
     'playlistDelete'      => 'response.twig',
     'playlistAddVideo'    => 'response.twig',
