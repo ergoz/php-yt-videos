@@ -172,12 +172,12 @@ abstract class AbstractService implements ServiceInterface
         return $this->parameters->all();
     }
 
-    protected function getParameter($key)
+    public function getParameter($key)
     {
         return $this->parameters->get($key);
     }
 
-    protected function setParameter($key, $value)
+    public function setParameter($key, $value)
     {
         $this->parameters->set($key, $value);
 
