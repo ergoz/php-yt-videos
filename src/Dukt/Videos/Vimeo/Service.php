@@ -47,7 +47,7 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
-    public function favorites($params)
+    public function favorites($params = array())
     {
         // authentication required
 
