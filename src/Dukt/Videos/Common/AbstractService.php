@@ -2,6 +2,8 @@
 
 namespace Dukt\Videos\Common;
 
+use Guzzle\Http\ClientInterface;
+use Symfony\Component\HttpFoundation\Request as HttpRequest;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 abstract class AbstractService implements ServiceInterface

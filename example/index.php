@@ -261,6 +261,7 @@ function appGet($name, $app, $method) {
 
 function appPost($name, $app, $method, $template)
 {
+
     $service = Dukt\Videos\Common\ServiceFactory::create($name);
     $sessionVar = 'dukt.videos.'.$service->getShortName();
     $sessionData = $app['session']->get($sessionVar);
@@ -282,15 +283,25 @@ function appPost($name, $app, $method, $template)
         $providerOptions['developerKey'] = $sessionData['developerKey'];    
     }
 
-    $provider = \OAuth\OAuth::provider($service->getProviderClass(), $providerOptions);
+    try {
+        $provider = \OAuth\OAuth::provider($service->getProviderClass(), $providerOptions);
 
-    $token = unserialize(base64_decode($sessionData['token']));
+        $token = unserialize(base64_decode($sessionData['token']));
 
-    // refresh token if needed ?
+        // refresh token if needed ?
 
-    $provider->setToken($token);
+        if(!$token)
+        {
+            throw new \Exception('Invalid Token 2');
+        }
+        $provider->setToken($token);
 
-    $service->setProvider($provider);
+        $service->setProvider($provider);
+
+    } catch(\Exception $e)
+    {
+        throw new Exception('Provider couln\'t instantiate');
+    }
 
     // load POST data
     $params = $app['request']->get('params');

@@ -28,9 +28,7 @@ class Video extends AbstractVideo
         else
         {
             $playlistEntryId = NULL;
-        }
-
-        
+        }        
 
         $videoId = Service::getVideoId($videoUrl);
 

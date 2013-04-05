@@ -7,8 +7,6 @@
 {% set title = service.name~": Video Response" %}
 {% block content %}
 
-
-
 {% if response.id is defined %}
     <p><b>$response->getId()</b></p>
     <pre>{{ dump(response.id) }}</pre>

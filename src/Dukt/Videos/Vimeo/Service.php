@@ -34,12 +34,13 @@ class Service extends AbstractService
         $params = array();
         $params['video_id'] = $opts['id'];
 
-        $r = $api->call($method, $params);
-
-        $video = $r->video;
-
         $video = new Video();
+
+
+        $r = $api->call($method, $params);
+        
         $video->instantiate($r->video[0]);
+
 
         return $video;
     }

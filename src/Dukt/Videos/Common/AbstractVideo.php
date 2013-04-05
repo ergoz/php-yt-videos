@@ -20,8 +20,7 @@ abstract class AbstractVideo implements VideoInterface
     public $thumbnails;
     public $title;
     public $description;
-
-
+    
     public function getDate($format = false)
     {
         if($format)

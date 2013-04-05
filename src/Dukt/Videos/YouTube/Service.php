@@ -68,15 +68,28 @@ class Service extends AbstractService
             return NULL;
         }
 
-        $url = 'https://gdata.youtube.com/feeds/api/videos/'.$opts['id'].'?v=2&'.http_build_query(array(
-            'refresh_token' => $this->provider->token->refresh_token,
-        ));
+        if(empty($opts['id']))
+        {
+            throw new \Exception('The video ID is required. (empty found)');
+        }
 
-        $result = file_get_contents($url);
-        $xml_obj = simplexml_load_string($result);   
+        $query = array();
+
+        if(isset($params['page']) && isset($params['perPage']))
+        {
+            $query = array(
+                'start-index' => $params['page'],
+                'max-results' => $params['perPage'],
+            );
+        }
+
+        $r = $this->apiCall('videos/'.$opts['id'], $query);
+
 
         $video = new Video();
-        $video->instantiate($xml_obj);
+
+        $video->instantiate($r);  
+        
 
         return $video;
     }
@@ -397,6 +410,7 @@ class Service extends AbstractService
 
     private function apiCall($url, $params = array(), $method='get')
     {
+
         $developerKey = $this->provider->developerKey;
 
         if(is_array($params))
@@ -446,11 +460,17 @@ class Service extends AbstractService
             // $code = $provider
             // $this->provider->access($code, $providerParams);
             // var_dump($this->provider);
+            throw new Exception('Provider Invalid Token');
         }
 
         if($method != 'delete')
         {
             $xml_obj = simplexml_load_string($result); 
+
+            if(isset($xml_obj->error))
+            {
+                throw new \Exception($xml_obj->error->internalReason);
+            }
 
             return $xml_obj;
         }
