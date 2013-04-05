@@ -18,6 +18,16 @@ abstract class AbstractService implements ServiceInterface
        $this->provider = $provider;
     }
 
+    public function isAuthenticated()
+    {
+        try {
+            $this->favorites();
+            return true;
+        } catch(\Exception $e)
+        {
+            return false;
+        }
+    }
 
     public function requestParameters($method)
     {
