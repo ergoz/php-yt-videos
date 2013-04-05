@@ -154,13 +154,14 @@ $service = Dukt\Videos\Common\ServiceFactory::create('YouTube');
 $service->setProvider($provider);
 ```
 
-Dukt Videos relies on [dukt/oauth](https://github.com/dukt/oauth), which is a fork of [chrisnharvey/oauth](https://github.com/chrisnharvey/oauth) to which we added Vimeo OAuth provider. We plan to use chrisnharvey's version as soon as our Vimeo pull request is accepted.
+Dukt Videos relies on [dukt/oauth](https://github.com/dukt/oauth), which is a fork of [chrisnharvey/oauth](https://github.com/chrisnharvey/oauth) to which we added Vimeo OAuth provider and some other tweaks. We will be using chrisnharvey's version as soon as we get out of alpha.
 
 
 ## Example Application
 
-An example application is provided in the `example` directory. You can run it using PHP's built in
-web server (PHP 5.4+):
+The documentation is not complete yet but you can use the example application provided in this package in order to understand how Dukt Videos works. The example application handles OAuth authentication for you. Once authenticated, you'll be able to run queries on YouTube and Vimeo.
+
+You can run it using PHP's built in web server (PHP 5.4+):
 
     $ php composer.phar update --dev
     $ php -S localhost:8000 -t example/
