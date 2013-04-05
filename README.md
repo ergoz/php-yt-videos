@@ -35,26 +35,12 @@ Creating a video  web site is very easy, all you need to do is : use the Service
 ```php
 $service = \Dukt\Videos\Common\ServiceFactory::create('YouTube', $provider);
 
-$url = "http://www.youtube.com/watch?v=0ZUvQ5h-TCA";
+$params['url'] = "http://www.youtube.com/watch?v=0ZUvQ5h-TCA";
 
-$videoId = $service->getVideoId($url);
+$video = $service->videoFromUrl($params);
 
-if($videoId) {
-    ?>
-    <h1>Videos Infos</h1>
-    <ul>
-        <li>url : <?php echo $url?></li>
-        <li>videoId : <?php echo $videoId?></li>
-    </ul>
-    <?php
-}
-else
-{
-    ?>
-    <h1>Error</h1>
-    <p>Invalid Video URL</p>
-    <?php
-}
+echo $video->getTitle();
+echo $video->getEmbed();
 ```
 
 ## Service Methods
@@ -76,7 +62,7 @@ The main methods implemented by video services are:
 ### Playlists
 
 * `playlists($params)` - Get playlists
-* `playlist($params)` - Get videos for given playlist
+* `playlistVideos($params)` - Get videos for given playlist
 * `playlistCreate($params)` - Create a playlist
 * `playlistDelete($params)` - Delete a playlist
 * `playlistAddVideo($params)` - Add a video to a playlist
