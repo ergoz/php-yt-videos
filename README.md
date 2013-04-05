@@ -47,26 +47,27 @@ echo $video->getEmbed();
 
 The main methods implemented by video services are:
 
-* `video($params)` - Get video from its ID
-* `search($params)` - Search videos
-* `uploads($params)` - Get uploaded videos
-* `userInfos($params)` - Get current user infos
+* `video($params)` - Get video from its ID (params : id)
+* `videoFromUrl($params)` - Get video from its URL (params : url)
+* `search($params)` - Search videos (params : q, page, perPage)
+* `uploads($params)` - Get uploaded videos (params : page, perPage)
+* `userInfos()` - Get current user infos
 
 ### Favorites
 
-* `favorites($params)` - Get favorite videos
-* `favoriteAdd($params)` - Add video to favorites
-* `favoriteRemove($params)` - Remove Video from favorites
-* `isFavorite($params)` - Checks if a video is a favorite
+* `favorites($params)` - Get favorite videos _(params : page, perPage)_
+* `favoriteAdd($params)` - Add video to favorites _(params : id)_
+* `favoriteRemove($params)` - Remove Video from favorites _(params : id)_
+* `isFavorite($params)` - Checks if a video is a favorite _(params : id)_
 
 ### Playlists
 
-* `playlists($params)` - Get playlists
-* `playlistVideos($params)` - Get videos for given playlist
-* `playlistCreate($params)` - Create a playlist
-* `playlistDelete($params)` - Delete a playlist
-* `playlistAddVideo($params)` - Add a video to a playlist
-* `playlistRemoveVideo($params)` - Remove a video from a playlist
+* `playlists($params)` - Get playlists _(params : id)_
+* `playlistVideos($params)` - Get videos for given playlist _(params : id)_
+* `playlistCreate($params)` - Create a playlist _(params : title, description, videoId)_
+* `playlistDelete($params)` - Delete a playlist _(params : id)_
+* `playlistAddVideo($params)` - Add a video to a playlist _(params : collectionId, videoId)_
+* `playlistRemoveVideo($params)` - Remove a video from a playlist _(params : collectionId, videoId, collectionEntryId)_
 
 ## Video Methods
 
