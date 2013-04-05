@@ -47,10 +47,10 @@ echo $video->getEmbed();
 
 The main methods implemented by video services are:
 
-* `video($params)` - Get video from its ID (params : id)
-* `videoFromUrl($params)` - Get video from its URL (params : url)
-* `search($params)` - Search videos (params : q, page, perPage)
-* `uploads($params)` - Get uploaded videos (params : page, perPage)
+* `video($params)` - Get video from its ID _(params : id)_
+* `videoFromUrl($params)` - Get video from its URL _(params : url)_
+* `search($params)` - Search videos _(params : q, page, perPage)_
+* `uploads($params)` - Get uploaded videos _(params : page, perPage)_
 * `userInfos()` - Get current user infos
 
 ### Favorites
