@@ -32,6 +32,7 @@ abstract class AbstractService implements ServiceInterface
             'playlistCreate'      => array('title' => "", 'description' => "", 'videoId' => ""),
             'playlistDelete'      => array('id' => ""),
             'video'            => array('id' => ""),
+            'videoFromUrl'            => array('url' => ""),
             'playlistAddVideo'    => array('collectionId' => "", 'videoId' => ""),
             'playlistRemoveVideo' => array('collectionId' => "", 'videoId' => "", 'collectionEntryId' => ""),
         );
@@ -64,11 +65,20 @@ abstract class AbstractService implements ServiceInterface
         return $this;
     }
 
-    public function getVideoFromUrl($url)
+    public function videoFromUrl($url)
     {
+        $url = $url['url'];
+
         $videoId = $this->getVideoId($url);
 
-        return $this->getVideo($videoId);
+        if(!$videoId)
+        {
+            throw new \Exception('Video not found with url given');
+        }
+
+        $params['id'] = $videoId;
+
+        return $this->video($params);
     }
 
 

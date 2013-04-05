@@ -231,7 +231,7 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
-    public function playlistsVideos($params = array())
+    public function playlists($params = array())
     {
         // authentication required
         
@@ -255,7 +255,7 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
-    public function playlist($params = array())
+    public function playlistVideos($params = array())
     {
         // authentication required
         

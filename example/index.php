@@ -198,6 +198,7 @@ $app->get('/services/{name}/authorize', function($name) use ($app) {
 $pages = array(
     'userInfos'           => 'response.twig',
     'video'               => 'responseVideo.twig',
+    'videoFromUrl'        => 'responseVideo.twig',
     'search'              => 'responseCollection.twig',
     'uploads'             => 'responseCollection.twig',
     

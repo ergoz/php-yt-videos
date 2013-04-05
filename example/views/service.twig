@@ -47,6 +47,10 @@ $response = $service->initialize($params);</pre>
         <li><a href="/services/{{ service.shortName }}/video">video()</a></li>
         {% endif %}
 
+        {% if service.supports('videoFromUrl') %}
+        <li><a href="/services/{{ service.shortName }}/videoFromUrl">videoFromUrl()</a></li>
+        {% endif %}
+
         {% if service.supports('search') %}
         <li><a href="/services/{{ service.shortName }}/search">search()</a></li>
         {% endif %}
