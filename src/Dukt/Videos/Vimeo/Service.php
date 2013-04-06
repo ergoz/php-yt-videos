@@ -8,7 +8,7 @@ use Dukt\Videos\Common\AbstractService;
 
 class Service extends AbstractService
 {
-    protected $providerClass = "Vimeo";
+    public $providerClass = "Vimeo";
 
     // --------------------------------------------------------------------
 

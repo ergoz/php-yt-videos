@@ -6,7 +6,7 @@ use Dukt\Videos\Common\AbstractService;
 
 class Service extends AbstractService
 {
-    protected $providerClass = "YouTube";
+    public $providerClass = "YouTube";
 
     // --------------------------------------------------------------------
 
@@ -45,7 +45,12 @@ class Service extends AbstractService
 
         ));
 
-        $user = json_decode(file_get_contents($url), true);
+        $user = @json_decode(file_get_contents($url), true);
+        
+        if(!$user)
+        {
+            throw new \Exception('Invalid Token');
+        }
 
         return array(
             'uid' => $this->provider->token->uid,
@@ -174,8 +179,15 @@ class Service extends AbstractService
 
         if(isset($params['page']) && isset($params['perPage']))
         {
+            $startIndex = $params['page'];
+
+            if($startIndex > 1)
+            {
+                $startIndex = (($params['page'] - 1) * $params['perPage']) + 1;
+            }
+
             $query = array(
-                'start-index' => $params['page'],
+                'start-index' => $startIndex,
                 'max-results' => $params['perPage'],
             );
         }
@@ -195,8 +207,15 @@ class Service extends AbstractService
             return NULL;
         }
 
+        $startIndex = $params['page'];
+
+        if($startIndex > 1)
+        {
+            $startIndex = (($params['page'] - 1) * $params['perPage']) + 1;
+        }
+
         $query = array(
-            'start-index' => $params['page'],
+            'start-index' => $startIndex,
             'max-results' => $params['perPage']
         );
 
