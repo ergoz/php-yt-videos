@@ -235,10 +235,16 @@ class Service extends AbstractService
             return NULL;
         }
 
+        $startIndex = $params['page'];
+
+        if($startIndex > 1)
+        {
+            $startIndex = (($params['page'] - 1) * $params['perPage']) + 1;
+        }
 
         $query = array(
             'q' => $params['q'],
-            'start-index' => $params['page'],
+            'start-index' => $startIndex,
             'max-results' => $params['perPage'],
         );
 
