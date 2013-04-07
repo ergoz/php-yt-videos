@@ -485,7 +485,7 @@ class Service extends AbstractService
             // $code = $provider
             // $this->provider->access($code, $providerParams);
             // var_dump($this->provider);
-            throw new Exception('Provider Invalid Token');
+            throw new \Exception('Provider Invalid Token');
         }
 
         if($method != 'delete')
