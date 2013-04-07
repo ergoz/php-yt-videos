@@ -58,7 +58,11 @@ class Video extends AbstractVideo
         
         $yt = $media->children('http://gdata.youtube.com/schemas/2007');
         
-        $duration = $yt->duration->attributes();
+        if(!empty($yt->duration))
+        {
+            $duration = $yt->duration->attributes();
+            $this->duration        = (int) $duration;
+        }
 
 
         // author
@@ -74,7 +78,7 @@ class Video extends AbstractVideo
         $this->service         = "YouTube";
         $this->date            = strtotime($xml->published);
         $this->plays           = (int) $statistics_view_count;
-        $this->duration        = (int) $duration;
+        
 
 
         // author
@@ -85,16 +89,19 @@ class Video extends AbstractVideo
         
 
         // thumbnails
+        if(count($media->group->thumbnail) > 0)
+        {
+            $this->thumbnail       = (string) $media->group->thumbnail[1]->attributes();
+            $this->thumbnailLarge  = (string) $media->group->thumbnail[0]->attributes();
 
-        $this->thumbnail       = (string) $media->group->thumbnail[1]->attributes();
-        $this->thumbnailLarge  = (string) $media->group->thumbnail[0]->attributes();
+            $this->thumbnails = array(
+                    (string) $media->group->thumbnail[0]->attributes(),
+                    (string) $media->group->thumbnail[1]->attributes(),
+                    (string) $media->group->thumbnail[2]->attributes(),
+                    (string) $media->group->thumbnail[3]->attributes(),
+                );
 
-        $this->thumbnails = array(
-                (string) $media->group->thumbnail[0]->attributes(),
-                (string) $media->group->thumbnail[1]->attributes(),
-                (string) $media->group->thumbnail[2]->attributes(),
-                (string) $media->group->thumbnail[3]->attributes(),
-            );
+        }
 
         $this->title           = (string) $xml->title;
         $this->description     = (string) $media->group->description[0];
