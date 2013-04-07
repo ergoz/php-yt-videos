@@ -266,9 +266,9 @@ class Service extends AbstractService
 
 
         $query = array(
-            'q' => $params['q'],
-            'start-index' => $params['page'],
-            'max-results' => $params['perPage'],
+            //'q' => $params['q'],
+            //'start-index' => $params['page'],
+            //'max-results' => $params['perPage'],
         );
 
         $r = $this->apiCall('users/default/playlists', $query);
