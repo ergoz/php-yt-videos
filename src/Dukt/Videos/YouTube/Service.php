@@ -264,7 +264,6 @@ class Service extends AbstractService
             return NULL;
         }
 
-
         $query = array(
             //'q' => $params['q'],
             //'start-index' => $params['page'],

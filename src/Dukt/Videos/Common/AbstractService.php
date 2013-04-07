@@ -21,8 +21,15 @@ abstract class AbstractService implements ServiceInterface
     public function isAuthenticated()
     {
         try {
-            $this->favorites();
-            return true;
+            $r = $this->favorites();
+
+            if($r)
+            {
+                return true;
+            }
+
+            return false;
+
         } catch(\Exception $e)
         {
             return false;
