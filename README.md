@@ -164,7 +164,7 @@ You can run it using PHP's built in web server (PHP 5.4+):
 There are already add-ons that you can download which are using dukt/videos library as one of their core features. Feel free to add your project to the list and ask for a pull request. Add-ons available :
 
 - [Dukt Videos for ExpressionEngine](http://dukt.net/add-ons/expressionengine/videos)
-- Dukt Videos for Craft *(Coming soon)*
+- [Dukt Videos for Craft](http://dukt.net/add-ons/craft/videos)
 
 ## Feedback
 
