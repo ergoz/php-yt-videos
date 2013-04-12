@@ -23,7 +23,7 @@
     "require": {
         "php": ">=5.3.2",
         "chrisnharvey/oauth": "dev-dukt.videos",
-        "dukt/vimeo": ">=1.0",
+        "dukt/vimeo": "dev-master",
         "symfony/finder": "2.2.*@dev",
         "guzzle/http": "~3.0",
         "symfony/http-foundation": "~2.1"
