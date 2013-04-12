@@ -20,10 +20,7 @@ class Service extends AbstractService
     public function getDefaultParameters()
     {
         return array(
-            'id' => "",
-            'secret' => "",
-            'developerKey' => "",
-            'token' => ""
+            'developerKey' => ""
         );
     }
 

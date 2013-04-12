@@ -18,6 +18,24 @@ abstract class AbstractService implements ServiceInterface
        $this->provider = $provider;
     }
 
+    public function initialize(array $parameters = array())
+    {
+        $this->parameters = new ParameterBag;
+
+        // set default parameters
+        foreach ($this->getDefaultParameters() as $key => $value) {
+            if (is_array($value)) {
+                $this->parameters->set($key, reset($value));
+            } else {
+                $this->parameters->set($key, $value);
+            }
+        }
+
+        Helper::initialize($this, $parameters);
+
+        return $this;
+    }
+
     public function isAuthenticated()
     {
         try {
@@ -64,30 +82,12 @@ abstract class AbstractService implements ServiceInterface
         return $array;
     }
 
-    public function initialize(array $parameters = array())
-    {
-        $this->parameters = new ParameterBag;
-
-        // set default parameters
-        foreach ($this->getDefaultParameters() as $key => $value) {
-            if (is_array($value)) {
-                $this->parameters->set($key, reset($value));
-            } else {
-                $this->parameters->set($key, $value);
-            }
-        }
-
-        Helper::initialize($this, $parameters);
-
-        return $this;
-    }
-
     public function videoFromUrl($url)
     {
         $url = $url['url'];
 
         $videoId = $this->getVideoId($url);
-
+        
         if(!$videoId)
         {
             throw new \Exception('Video not found with url given');
@@ -95,21 +95,10 @@ abstract class AbstractService implements ServiceInterface
 
         $params['id'] = $videoId;
 
-        return $this->video($params);
-    }
-
-
-
-    public function get_video($video_url)
-    {
+        $video = $this->video($params);
         
+        return $video;
     }
-
-    public function get_embed($video_id, $user_embed_opts)
-    {
-
-    }
-
 
     public function getShortName()
     {
@@ -125,75 +114,25 @@ abstract class AbstractService implements ServiceInterface
 
     public function getDefaultParameters()
     {
-        return array(
-            'id' => "",
-            'secret' => "",
-            'token' => ""
-        );
-    }
-
-    public function getId()
-    {
-        return $this->getParameter('id');
-    }
-
-    public function setId($id)
-    {
-        return $this->setParameter('id', $id);
-    }
-
-    public function getSecret()
-    {
-        return $this->getParameter('secret');
-    }
-
-    public function setSecret($secret)
-    {
-        return $this->setParameter('secret', $secret);
-    }
-
-    public function getToken()
-    {
-        return $this->getParameter('token');
-    }
-
-    public function setToken($token)
-    {
-        return $this->setParameter('token', $token);
-    }
-
-    public function getDeveloperKey()
-    {
-        return $this->getParameter('developerKey');
-    }
-
-    public function setDeveloperKey($value)
-    {
-        return $this->setParameter('developerKey', $value);
-    }
-
-
-
-    public function getParameters()
-    {
-        return $this->parameters->all();
-    }
-
-    public function getParameter($key)
-    {
-        return $this->parameters->get($key);
-    }
-
-    public function setParameter($key, $value)
-    {
-        $this->parameters->set($key, $value);
-
-        return $this;
+        return array();
     }
 
     public function supports($method)
     {
         return method_exists($this, $method);
+    }
+
+
+
+
+    public function get_video($video_url)
+    {
+        
+    }
+
+    public function get_embed($video_id, $user_embed_opts)
+    {
+
     }
 
 }
