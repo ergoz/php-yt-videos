@@ -114,7 +114,7 @@ $app->post('/services/{name}', function($name) use ($app) {
     $app['session']->getFlashBag()->add('success', 'Service settings updated!');
 
     $token = $service->getToken();
-    
+
     if(empty($token))
     {
         return $app->redirect($app['request']->getPathInfo().'/authorize');
@@ -288,11 +288,6 @@ function appPost($name, $app, $method, $template)
     $providerOptions['id'] = $sessionData['clientId'];
     $providerOptions['secret'] = $sessionData['clientSecret'];    
     $providerOptions['redirect_url'] = $authorize_url;
-
-    if(isset($sessionData['developerKey']))
-    {
-        $providerOptions['developerKey'] = $sessionData['developerKey'];    
-    }
 
     try {
         $provider = \OAuth\OAuth::provider($service->getProviderClass(), $providerOptions);

@@ -447,7 +447,7 @@ class Service extends AbstractService
     private function apiCall($url, $params = array(), $method='get')
     {
 
-        $developerKey = $this->provider->developerKey;
+        $developerKey = $this->getDeveloperKey();
 
         if(is_array($params))
         {
