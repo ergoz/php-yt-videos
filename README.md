@@ -77,25 +77,15 @@ The main methods implemented by video are:
 
 ## OAuth Providers
 
-For authenticated calls, video service need an OAuth provider. Each video service has its own provider :
-
-**Vimeo**
-
-* Service : Vimeo
-* OAuth Provider : Vimeo
-
-**YouTube**
-
-* Service : YouTube
-* OAuth Provider : Google
-
 Here is how to create an OAuth provider and use it with a service :
 
 ```php
 
 // Create the OAuth provider
 
-$provider = \OAuth\OAuth::provider('Google', array(
+$providerClass = 'YouTube';
+
+$provider = \OAuth\OAuth::provider($providerClass, array(
     'id' => CLIENT_ID,
     'secret' => CLIENT_SECRET,
     'redirect_url' => REDIRECT_URL
@@ -118,7 +108,7 @@ $provider = $provider->process(function($url, $token = null) {
 
 // Create video service
 
-$service = Dukt\Videos\Common\ServiceFactory::create('YouTube');
+$service = Dukt\Videos\Common\ServiceFactory::create($providerClass);
 $service->setProvider($provider);
 
 
@@ -139,7 +129,9 @@ $token = unserialize(base64_decode(STORED_TOKEN));
 
 // Create the OAuth provider
 
-$provider = \OAuth\OAuth::provider('Google', array(
+$providerClass = 'YouTube';
+
+$provider = \OAuth\OAuth::provider($providerClass, array(
     'id' => CLIENT_ID,
     'secret' => CLIENT_SECRET,
     'redirect_url' => REDIRECT_URL
@@ -150,7 +142,7 @@ $provider->setToken($token);
 
 // Create video service
 
-$service = Dukt\Videos\Common\ServiceFactory::create('YouTube');
+$service = Dukt\Videos\Common\ServiceFactory::create($providerClass);
 $service->setProvider($provider);
 ```
 
