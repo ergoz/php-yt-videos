@@ -5,16 +5,114 @@
 {% endblock %}
 
 {% set title = service.name %}
+{% set token = service.getUnserializedToken() %}
 
 {% block content %}
+
+    <p>
+        {% if token is not null %}
+            <span class="label label-success">Connected</span>
+        {% else %}
+            <span class="label label-warning">Disconnected</span>
+        {% endif %}
+    </p>
+
+
 
     <p>You can create an instance of this service using:</p>
     <pre>$service = ServiceFactory::create('{{ service.shortName }}');
 $response = $service->initialize($params);</pre>
+    
+    {% if token is not null %}
+    
+        <h3>Methods</h3>
+            {% if service.supports('video') %}
+            <li><a href="/services/{{ service.shortName }}/video">video()</a></li>
+            {% endif %}
 
-    <h3>Service Settings</h3>
-    <p><span class="label label-info">Note</span> These settings will be stored in your session and used to make calls to video service API.</p>
+            {% if service.supports('videoFromUrl') %}
+            <li><a href="/services/{{ service.shortName }}/videoFromUrl">videoFromUrl()</a></li>
+            {% endif %}
 
+            {% if service.supports('search') %}
+            <li><a href="/services/{{ service.shortName }}/search">search()</a></li>
+            {% endif %}
+            
+            {% if service.supports('uploads') %}
+            <li><a href="/services/{{ service.shortName }}/uploads">uploads()</a></li>
+            {% endif %}
+
+            {% if service.supports('userInfos') %}
+            <li><a href="/services/{{ service.shortName }}/userInfos">userInfos()</a></li>
+            {% endif %}
+
+
+        <h4>Favorites</h4>
+        <ul>
+            {% for key in ["favorites", "favoriteAdd", "favoriteRemove", "isFavorite"] %}
+                {% if service.supports(key) %}
+                    <li><a href="/services/{{ service.shortName }}/{{key}}">{{key}}()</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+
+
+        <h4>Playlists</h4>
+        <ul>
+            {% for key in ["playlists", "playlistVideos", "playlistCreate", "playlistDelete", "playlistAddVideo", "playlistRemoveVideo"] %}
+                {% if service.supports(key) %}
+                    <li><a href="/services/{{ service.shortName }}/{{key}}">{{key}}()</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+
+    <form method="post" class="form-horizontal">
+        <h3>Settings</h3>
+
+
+        <p>
+            These settings will be stored in your session and used to make calls to video service API.
+        </p>
+
+
+        {% for key, default in service.getDefaultParameters %}
+
+            <div class="control-group">
+                <label class="control-label" for="service_{{key}}">{{ key }}</label>
+                <div class="controls">
+                    <input type="text" class="span8" name="service[{{key}}]" id="service_{{key}}" value="{{settings[key]}}"{% if key == 'token' %} disabled="disabled"{% endif %} />
+                </div>
+            </div>
+
+        {% endfor %}
+
+        {% if token is not null %}
+            
+            {% for key, value in token %}
+
+                <div class="control-group">
+                    <label class="control-label" for="token_{{key}}">{{ key }}</label>
+                    <div class="controls">
+                        <input type="text" class="span8" value="{{value}}" disabled="disabled" />
+                    </div>
+                </div>
+
+            {% endfor %}
+        {% endif %}
+
+        <div class="form-actions">
+            {% if token is null %}
+                <button type="submit" class="btn btn-primary">Connect</button>
+            {% else %}
+                <a class="btn" href="/services/{{ service.shortName }}/revoke">Revoke Access</a>
+            {% endif %}
+        </div>
+    </form>
+
+
+    {#
     <form method="post" class="form-horizontal">
 
         {% for key, default in service.getDefaultParameters %}
@@ -29,7 +127,8 @@ $response = $service->initialize($params);</pre>
         {% endfor %}
 
         <div class="form-actions">
-            {% if settings['token'] is empty %}
+
+            {% if settings.token is defined and services.token|length > 0 %}
                 <button type="submit" class="btn btn-primary">Connect</button>
             {% else %}
                 <a class="btn" href="/services/{{ service.shortName }}/revoke">Revoke Access</a>
@@ -37,56 +136,6 @@ $response = $service->initialize($params);</pre>
         </div>
     </form>
 
-    <h3>Service Methods</h3>
 
-    <p>Click on a method to generate a test request.</p>
-
-    <ul>
-
-        {% if service.supports('video') %}
-        <li><a href="/services/{{ service.shortName }}/video">video()</a></li>
-        {% endif %}
-
-        {% if service.supports('videoFromUrl') %}
-        <li><a href="/services/{{ service.shortName }}/videoFromUrl">videoFromUrl()</a></li>
-        {% endif %}
-
-        {% if service.supports('search') %}
-        <li><a href="/services/{{ service.shortName }}/search">search()</a></li>
-        {% endif %}
-        
-        {% if service.supports('uploads') %}
-        <li><a href="/services/{{ service.shortName }}/uploads">uploads()</a></li>
-        {% endif %}
-
-        {% if service.supports('userInfos') %}
-        <li><a href="/services/{{ service.shortName }}/userInfos">userInfos()</a></li>
-        {% endif %}
-        
-    </ul>
-
-    
-
-    
-
-    <h4>Favorites</h4>
-    <ul>
-        {% for key in ["favorites", "favoriteAdd", "favoriteRemove", "isFavorite"] %}
-            {% if service.supports(key) %}
-                <li><a href="/services/{{ service.shortName }}/{{key}}">{{key}}()</a></li>
-            {% endif %}
-        {% endfor %}
-    </ul>
-
-
-    <h4>Playlists</h4>
-    <ul>
-        {% for key in ["playlists", "playlistVideos", "playlistCreate", "playlistDelete", "playlistAddVideo", "playlistRemoveVideo"] %}
-            {% if service.supports(key) %}
-                <li><a href="/services/{{ service.shortName }}/{{key}}">{{key}}()</a></li>
-            {% endif %}
-        {% endfor %}
-    </ul>
-
-
+    #}
 {% endblock %}

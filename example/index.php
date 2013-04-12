@@ -104,6 +104,7 @@ $app->get('/services/{name}', function($name) use ($app) {
 $app->post('/services/{name}', function($name) use ($app) {
     $service = Dukt\Videos\Common\serviceFactory::create($name);
     $sessionVar = 'dukt.videos.'.$service->getShortName();
+    
     $service->initialize((array) $app['request']->get('service'));
 
     // save service settings in session
@@ -113,7 +114,7 @@ $app->post('/services/{name}', function($name) use ($app) {
     $app['session']->getFlashBag()->add('success', 'Service settings updated!');
 
     $token = $service->getToken();
-
+    
     if(empty($token))
     {
         return $app->redirect($app['request']->getPathInfo().'/authorize');
@@ -152,15 +153,24 @@ $app->get('/services/{name}/authorize', function($name) use ($app) {
     // retrieve service with params
 
     $service = Dukt\Videos\Common\ServiceFactory::create($name);
-    $sessionVar = 'dukt.videos.'.$service->getShortName();
-    $parameters = $app['session']->get($sessionVar);
-    $service->initialize((array) $parameters);
 
-    $provider = \OAuth\OAuth::provider($service->getProviderClass(), array(
-        'id' => $parameters['id'],
-        'secret' => $parameters['secret'],
-        'redirect_url' => $app['request']->getSchemeAndHttpHost().$app['request']->getBaseUrl().$app['request']->getPathInfo()
-    ));
+    $sessionVar = 'dukt.videos.'.$service->getShortName();
+
+    $params = $app['session']->get($sessionVar);
+
+
+    $service->initialize((array) $params);
+
+
+    $providerSettings = array(
+            'id' => $params['clientId'],
+            'secret' => $params['clientSecret'],
+            'redirect_url' => $app['request']->getSchemeAndHttpHost().
+                                    $app['request']->getBaseUrl().
+                                    $app['request']->getPathInfo()
+        );
+
+    $provider = \OAuth\OAuth::provider($service->getProviderClass(), $providerSettings);
 
     $provider = $provider->process(function($url, $token = null) {
 
@@ -177,11 +187,11 @@ $app->get('/services/{name}/authorize', function($name) use ($app) {
     });
 
     // save token
+    
+    $params['token'] = $provider->token();
+    $params['token'] = base64_encode(serialize($params['token']));
 
-    $parameters['token'] = $provider->token();
-    $parameters['token'] = base64_encode(serialize($parameters['token']));
-
-    $app['session']->set($sessionVar, $parameters);
+    $app['session']->set($sessionVar, $params);
 
 
     // redirect to service
@@ -275,8 +285,8 @@ function appPost($name, $app, $method, $template)
         .'/authorize';
 
     $providerOptions = array();
-    $providerOptions['id'] = $sessionData['id'];
-    $providerOptions['secret'] = $sessionData['secret'];    
+    $providerOptions['id'] = $sessionData['clientId'];
+    $providerOptions['secret'] = $sessionData['clientSecret'];    
     $providerOptions['redirect_url'] = $authorize_url;
 
     if(isset($sessionData['developerKey']))

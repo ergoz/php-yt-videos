@@ -19,9 +19,24 @@ class Service extends AbstractService
 
     public function getDefaultParameters()
     {
-        return array(
-            'developerKey' => ""
-        );
+        $settings = parent::getDefaultParameters();
+        $settings['developerKey'] = "";
+
+        return $settings;
+    }
+
+    // --------------------------------------------------------------------
+
+    public function getDeveloperKey()
+    {
+        return $this->getParameter('developerKey');
+    }
+
+    // --------------------------------------------------------------------
+
+    public function setDeveloperKey($value)
+    {
+        return $this->setParameter('developerKey', $value);
     }
 
     // --------------------------------------------------------------------

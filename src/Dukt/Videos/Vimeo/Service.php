@@ -330,7 +330,6 @@ class Service extends AbstractService
         //return $r;
     }
 
-
     // --------------------------------------------------------------------
 
     public function playlistCreate($params = array())
@@ -461,7 +460,6 @@ class Service extends AbstractService
 
         return $videos;
     }
-
 
     // --------------------------------------------------------------------
 

@@ -8,18 +8,22 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 abstract class AbstractService implements ServiceInterface
 {
-
-    protected $parameters;
-
     public $provider;
+
+    protected $parameters;    
+
+    // --------------------------------------------------------------------
 
     public function __construct(Provider $provider = null)
     {
        $this->provider = $provider;
     }
 
+    // --------------------------------------------------------------------
+
     public function initialize(array $parameters = array())
     {
+
         $this->parameters = new ParameterBag;
 
         // set default parameters
@@ -35,6 +39,113 @@ abstract class AbstractService implements ServiceInterface
 
         return $this;
     }
+
+    // --------------------------------------------------------------------
+
+    public function getDefaultParameters()
+    {
+        return array(
+                'clientId' => '',
+                'clientSecret' => ''
+            );
+    }
+
+    // --------------------------------------------------------------------
+
+    public function getParameters()
+    {
+        return $this->parameters->all();
+    }
+
+    // --------------------------------------------------------------------
+
+    protected function getParameter($key)
+    {
+        return $this->parameters->get($key);
+    }
+
+    // --------------------------------------------------------------------
+
+    protected function setParameter($key, $value)
+    {
+        $this->parameters->set($key, $value);
+
+        return $this;
+    }
+
+    // --------------------------------------------------------------------
+
+    public function getClientId()
+    {
+        return $this->getParameter('clientId');
+    }
+
+    // --------------------------------------------------------------------
+
+    public function setClientId($value)
+    {
+        return $this->setParameter('clientId', $value);
+    }
+
+    // --------------------------------------------------------------------
+
+    public function getClientSecret()
+    {
+        return $this->getParameter('clientSecret');
+    }
+
+    // --------------------------------------------------------------------
+
+    public function setClientSecret($value)
+    {
+        return $this->setParameter('clientSecret', $value);
+    }
+
+    // --------------------------------------------------------------------
+
+    public function getToken()
+    {
+        return $this->getParameter('token');
+    }
+
+    // --------------------------------------------------------------------
+
+    public function setToken($value)
+    {
+        return $this->setParameter('token', $value);
+    }
+
+    // --------------------------------------------------------------------
+
+    public function getUnserializedToken()
+    {
+        $token = $this->getParameter('token');
+        $token = base64_decode($token);
+        $token = unserialize($token);
+        $token = (array) $token;
+
+        if(is_array($token))
+        {
+            if(count($token) > 0)
+            {
+                if(isset($token[0]))
+                {
+                    if($token[0] !== false)
+                    {
+                        return $token;
+                    }
+                }
+                else
+                {
+                    return $token;    
+                }
+            }
+        }
+        
+        return NULL;
+    }
+
+    // --------------------------------------------------------------------
 
     public function isAuthenticated()
     {
@@ -53,6 +164,8 @@ abstract class AbstractService implements ServiceInterface
             return false;
         }
     }
+
+    // --------------------------------------------------------------------
 
     public function requestParameters($method)
     {
@@ -82,6 +195,8 @@ abstract class AbstractService implements ServiceInterface
         return $array;
     }
 
+    // --------------------------------------------------------------------
+
     public function videoFromUrl($url)
     {
         $url = $url['url'];
@@ -100,39 +215,26 @@ abstract class AbstractService implements ServiceInterface
         return $video;
     }
 
+    // --------------------------------------------------------------------
+
     public function getShortName()
     {
         $sn = Helper::getServiceShortName(get_class($this));
         
         return $sn;
     }
+
+    // --------------------------------------------------------------------
     
     public function getProviderClass()
     {
         return $this->providerClass;
     }
 
-    public function getDefaultParameters()
-    {
-        return array();
-    }
+    // --------------------------------------------------------------------
 
     public function supports($method)
     {
         return method_exists($this, $method);
     }
-
-
-
-
-    public function get_video($video_url)
-    {
-        
-    }
-
-    public function get_embed($video_id, $user_embed_opts)
-    {
-
-    }
-
 }
