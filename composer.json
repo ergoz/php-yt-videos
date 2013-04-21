@@ -18,6 +18,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/dukt/oauth"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/dukt/vimeo"
         }
     ],
     "require": {
