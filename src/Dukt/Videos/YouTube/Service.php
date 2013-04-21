@@ -58,7 +58,7 @@ class Service extends AbstractService
         ));
 
         $user = @json_decode(file_get_contents($url), true);
-        
+
         if(!$user)
         {
             throw new \Exception('Invalid Token');
@@ -80,7 +80,7 @@ class Service extends AbstractService
     public function video($opts)
     {
         // authentication required
-        
+
         if(!$this->provider) {
             return NULL;
         }
@@ -105,15 +105,15 @@ class Service extends AbstractService
 
         $video = new Video();
 
-        $video->instantiate($r);  
-        
+        $video->instantiate($r);
+
 
         return $video;
     }
 
-    
+
     // --------------------------------------------------------------------
-    
+
     /**
      * Add favorite
      *
@@ -124,7 +124,7 @@ class Service extends AbstractService
     function favoriteAdd($params)
     {
         // authentication required
-        
+
         if(!$this->provider) {
             return NULL;
         }
@@ -134,9 +134,9 @@ class Service extends AbstractService
 
         $r = $this->apiCall('users/default/favorites', $query, 'post');
     }
-    
+
     // --------------------------------------------------------------------
-    
+
     /**
      * Remove favorite
      *
@@ -147,7 +147,7 @@ class Service extends AbstractService
     function favoriteRemove($params)
     {
         // authentication required
-        
+
         if(!$this->provider) {
             return NULL;
         }
@@ -155,7 +155,7 @@ class Service extends AbstractService
         // get favorites
 
         $r = $this->apiCall('users/default/favorites');
-        
+
         foreach($r->entry as $v)
         {
             $video = new Video();
@@ -182,7 +182,7 @@ class Service extends AbstractService
     public function favorites($params = array())
     {
         // authentication required
-        
+
         if(!$this->provider) {
             return NULL;
         }
@@ -205,7 +205,7 @@ class Service extends AbstractService
         }
 
         $r = $this->apiCall('users/default/favorites', $query);
-        
+
         return $this->extractVideos($r);
     }
 
@@ -214,7 +214,7 @@ class Service extends AbstractService
     public function uploads($params = array())
     {
         // authentication required
-        
+
         if(!$this->provider) {
             return NULL;
         }
@@ -232,17 +232,17 @@ class Service extends AbstractService
         );
 
         $r = $this->apiCall('users/default/uploads', $query);
-    
+
         return $this->extractVideos($r);
     }
 
     // --------------------------------------------------------------------
-        
+
 
     public function search($params = array())
     {
         // authentication required
-        
+
         if(!$this->provider) {
             return NULL;
         }
@@ -271,7 +271,7 @@ class Service extends AbstractService
     public function playlists($params = array())
     {
         // authentication required
-        
+
         if(!$this->provider) {
             return NULL;
         }
@@ -285,7 +285,7 @@ class Service extends AbstractService
         $r = $this->apiCall('users/default/playlists', $query);
 
         return $this->extractCollections($r);
-        
+
         //return $r;
     }
 
@@ -294,7 +294,7 @@ class Service extends AbstractService
     public function playlistVideos($params = array())
     {
         // authentication required
-        
+
         if(!$this->provider) {
             return NULL;
         }
@@ -308,7 +308,7 @@ class Service extends AbstractService
         $r = $this->apiCall('playlists/'.$params['id'], $query);
 
         return $this->extractVideos($r);
-        
+
         // return $r;
     }
 
@@ -318,7 +318,7 @@ class Service extends AbstractService
     {
 
         // authentication required
-        
+
         if(!$this->provider) {
             return NULL;
         }
@@ -340,7 +340,7 @@ class Service extends AbstractService
     public function playlistDelete($params = array())
     {
         // authentication required
-        
+
         if(!$this->provider) {
             return NULL;
         }
@@ -349,7 +349,7 @@ class Service extends AbstractService
         $query = array();
 
         $r = $this->apiCall('users/default/playlists/'.$params['id'], $query, 'delete');
-        
+
         return $r;
     }
 
@@ -359,7 +359,7 @@ class Service extends AbstractService
     {
 
         // authentication required
-        
+
         if(!$this->provider) {
             return NULL;
         }
@@ -383,7 +383,7 @@ class Service extends AbstractService
     public function playlistRemoveVideo($params = array())
     {
         // authentication required
-        
+
         if(!$this->provider) {
             return NULL;
         }
@@ -392,7 +392,7 @@ class Service extends AbstractService
         $query = array();
 
         $r = $this->apiCall('playlists/'.$params['collectionId'].'/'.$params['collectionEntryId'], $query, 'delete');
-        
+
         return $r;
     }
 
@@ -402,11 +402,11 @@ class Service extends AbstractService
     public static function getVideoId($url)
     {
         // check if url works with this service and extract video_id
-        
+
         $video_id = false;
 
         $regexp = array('/^https?:\/\/(www\.youtube\.com|youtube\.com|youtu\.be).*\/(watch\?v=)?(.*)/', 3);
-        
+
 
 
         if(preg_match($regexp[0], $url, $matches, PREG_OFFSET_CAPTURE) > 0)
@@ -466,13 +466,13 @@ class Service extends AbstractService
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
-        curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1); 
+        curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
                 'Authorization:Bearer '.$this->provider->token->access_token,
                 'Content-Type:application/atom+xml',
                 'X-GData-Key:key='.$developerKey
             ));
-        
+
         if($method=="post")
         {
             curl_setopt ($curl, CURLOPT_POST, true);
@@ -501,7 +501,7 @@ class Service extends AbstractService
 
         if($method != 'delete')
         {
-            $xml_obj = simplexml_load_string($result); 
+            $xml_obj = simplexml_load_string($result);
 
             if(isset($xml_obj->error))
             {
@@ -519,7 +519,7 @@ class Service extends AbstractService
     private function extractVideos($r)
     {
         $videos = array();
-        
+
         foreach($r->entry as $v)
         {
             $video = new Video();
@@ -537,7 +537,7 @@ class Service extends AbstractService
     private function extractCollections($r)
     {
         $collections = array();
-        
+
         foreach($r->entry as $v)
         {
             $collection = new Collection();
@@ -553,8 +553,8 @@ class Service extends AbstractService
 
     function isFavorite($params)
     {
-        $videos = $this->getFavorites($params);
-        
+        $videos = $this->favorites($params);
+
         if(!$videos)
         {
             return false;

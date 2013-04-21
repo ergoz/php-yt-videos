@@ -51,7 +51,7 @@ $app->get('/tests/unauthenticated', function() use ($app) {
         <p>Invalid Video URL</p>
         <?php
     }
-    
+
     die();
 });
 
@@ -82,7 +82,7 @@ $app->get('/tests/embed', function() use ($app) {
         <h1>Error</h1>
         <?php
     }
-    
+
     die();
 });
 
@@ -104,7 +104,7 @@ $app->get('/services/{name}', function($name) use ($app) {
 $app->post('/services/{name}', function($name) use ($app) {
     $service = Dukt\Videos\Common\serviceFactory::create($name);
     $sessionVar = 'dukt.videos.'.$service->getShortName();
-    
+
     $service->initialize((array) $app['request']->get('service'));
 
     // save service settings in session
@@ -118,12 +118,12 @@ $app->post('/services/{name}', function($name) use ($app) {
     if(empty($token))
     {
         return $app->redirect($app['request']->getPathInfo().'/authorize');
-    }   
+    }
     else
     {
         return $app->redirect($app['request']->getPathInfo());
-    } 
-    
+    }
+
 });
 
 // create service revoke
@@ -187,7 +187,7 @@ $app->get('/services/{name}/authorize', function($name) use ($app) {
     });
 
     // save token
-    
+
     $params['token'] = $provider->token();
     $params['token'] = base64_encode(serialize($params['token']));
 
@@ -197,7 +197,7 @@ $app->get('/services/{name}/authorize', function($name) use ($app) {
     // redirect to service
     $redirect = $app['request']->getPathInfo();
     $redirect = substr($redirect, 0,  - (strlen($redirect) - strrpos($redirect, "/")) );
-    
+
     return $app->redirect($redirect);
 
 });
@@ -211,12 +211,12 @@ $pages = array(
     'videoFromUrl'        => 'responseVideo.twig',
     'search'              => 'responseCollection.twig',
     'uploads'             => 'responseCollection.twig',
-    
+
     'favoriteAdd'         => 'response.twig',
     'favoriteRemove'      => 'response.twig',
     'favorites'           => 'responseCollection.twig',
     'isFavorite'          => 'response.twig',
-    
+
     'playlists'           => 'responseCollection.twig',
     'playlistVideos'      => 'responseCollection.twig',
     'playlistCreate'      => 'response.twig',
@@ -277,7 +277,7 @@ function appPost($name, $app, $method, $template)
     $sessionVar = 'dukt.videos.'.$service->getShortName();
     $sessionData = $app['session']->get($sessionVar);
     $service->initialize((array) $sessionData);
-    
+
     $authorize_url = $app['request']->getSchemeAndHttpHost()
         .$app['request']->getBaseUrl()
         .'/services/'
@@ -286,7 +286,7 @@ function appPost($name, $app, $method, $template)
 
     $providerOptions = array();
     $providerOptions['id'] = $sessionData['clientId'];
-    $providerOptions['secret'] = $sessionData['clientSecret'];    
+    $providerOptions['secret'] = $sessionData['clientSecret'];
     $providerOptions['redirect_url'] = $authorize_url;
 
     try {
