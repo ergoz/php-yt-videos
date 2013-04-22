@@ -51,6 +51,13 @@ abstract class AbstractService implements ServiceInterface
             );
     }
 
+    public function getExtraParameters()
+    {
+        $settings = array();
+
+        return $settings;
+    }
+
     // --------------------------------------------------------------------
 
     public function getParameters()
