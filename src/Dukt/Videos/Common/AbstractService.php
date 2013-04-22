@@ -10,7 +10,7 @@ abstract class AbstractService implements ServiceInterface
 {
     public $provider;
 
-    protected $parameters;    
+    protected $parameters;
 
     // --------------------------------------------------------------------
 
@@ -145,11 +145,11 @@ abstract class AbstractService implements ServiceInterface
                 }
                 else
                 {
-                    return $token;    
+                    return $token;
                 }
             }
         }
-        
+
         return NULL;
     }
 
@@ -210,7 +210,7 @@ abstract class AbstractService implements ServiceInterface
         $url = $url['url'];
 
         $videoId = $this->getVideoId($url);
-        
+
         if(!$videoId)
         {
             throw new \Exception('Video not found with url given');
@@ -219,7 +219,7 @@ abstract class AbstractService implements ServiceInterface
         $params['id'] = $videoId;
 
         $video = $this->video($params);
-        
+
         return $video;
     }
 
@@ -228,12 +228,12 @@ abstract class AbstractService implements ServiceInterface
     public function getShortName()
     {
         $sn = Helper::getServiceShortName(get_class($this));
-        
+
         return $sn;
     }
 
     // --------------------------------------------------------------------
-    
+
     public function getProviderClass()
     {
         return $this->providerClass;
