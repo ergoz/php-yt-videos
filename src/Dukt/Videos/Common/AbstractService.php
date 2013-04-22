@@ -21,8 +21,9 @@ abstract class AbstractService implements ServiceInterface
 
     // --------------------------------------------------------------------
 
-    public function initialize(array $parameters = array())
+    public function initialize($parameters = array())
     {
+        $parameters = (array) $parameters;
 
         $this->parameters = new ParameterBag;
 
