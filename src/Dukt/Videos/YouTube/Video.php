@@ -86,13 +86,13 @@ class Video extends AbstractVideo
         $this->authorName      = (string) $author->name;
         $this->authorUrl       = "http://youtube.com/user/".$author->name;
         $this->authorUsername  = (string) $author->name;
-        
+
 
         // thumbnails
         if(count($media->group->thumbnail) > 0)
         {
             $this->thumbnail       = (string) $media->group->thumbnail[1]->attributes();
-            $this->thumbnailLarge  = (string) $media->group->thumbnail[0]->attributes();
+            $this->thumbnailLarge  = (string) $media->group->thumbnail[2]->attributes();
 
             $this->thumbnails = array(
                     (string) $media->group->thumbnail[0]->attributes(),
