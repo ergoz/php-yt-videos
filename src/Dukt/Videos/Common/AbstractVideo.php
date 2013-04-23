@@ -20,7 +20,7 @@ abstract class AbstractVideo implements VideoInterface
     public $thumbnails;
     public $title;
     public $description;
-    
+
     public function getDate($format = false)
     {
         if($format)
@@ -59,7 +59,7 @@ abstract class AbstractVideo implements VideoInterface
     }
 
     // ------------------------------------------------------------------------------
-    
+
     /**
      * Duration from seconds to h:m:s
      *
@@ -72,18 +72,18 @@ abstract class AbstractVideo implements VideoInterface
         $padHours = true;
 
         $hms = "";
-        $hours = intval(intval($sec) / 3600); 
-        
-        $hms .= ($padHours) 
+        $hours = intval(intval($sec) / 3600);
+
+        $hms .= ($padHours)
         ? str_pad($hours, 2, "0", STR_PAD_LEFT). ":"
         : $hours. ":";
-        
-        $minutes = intval(($sec / 60) % 60); 
-        
+
+        $minutes = intval(($sec / 60) % 60);
+
         $hms .= str_pad($minutes, 2, "0", STR_PAD_LEFT). ":";
-        
-        $seconds = intval($sec % 60); 
-        
+
+        $seconds = intval($sec % 60);
+
         $hms .= str_pad($seconds, 2, "0", STR_PAD_LEFT);
 
         if($format)
@@ -98,7 +98,7 @@ abstract class AbstractVideo implements VideoInterface
         {
             $r = $this->duration;
         }
-        
+
         return $r;
     }
 
@@ -128,7 +128,7 @@ abstract class AbstractVideo implements VideoInterface
 
         $options = http_build_query($options);
 
-        $format = '<iframe src="'.$this->embedUrl.$queryMark.$options.'" '.$extraParameters.' frameborder="0" allowfullscreen="true" allowscriptaccess="true"></iframe>';      
+        $format = '<iframe src="'.$this->embedUrl.$queryMark.$options.'" '.$extraParameters.' frameborder="0" allowfullscreen="true" allowscriptaccess="true"></iframe>';
 
         $embed = sprintf($format, $this->id);
 

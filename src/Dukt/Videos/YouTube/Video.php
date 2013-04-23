@@ -7,13 +7,13 @@ use Dukt\Videos\Common\AbstractVideo;
 class Video extends AbstractVideo
 {
     protected $embedUrl =  "http://www.youtube.com/embed/%s?wmode=transparent";
-    
+
     public function instantiate($xml)
     {
         // extract videoId
 
         $videoUrl = (string) $xml->link[0]->attributes()->href[0];
-        
+
         $this->systemId = (string) $xml->id;
 
         $playlistEntryId = $this->systemId;
@@ -28,36 +28,36 @@ class Video extends AbstractVideo
         else
         {
             $playlistEntryId = NULL;
-        }        
+        }
 
         $videoId = Service::getVideoId($videoUrl);
 
         $yt = $xml->children('http://gdata.youtube.com/schemas/2007');
         $media = $xml->children('http://search.yahoo.com/mrss/');
         $player = $media->group->player->attributes();
-        
-        
+
+
         // statistics
-        
+
         $statistics_view_count =  0;
-        
+
         if($yt->statistics)
         {
             $statistics = $yt->statistics->attributes();
-                
+
             if(isset($statistics['viewCount']))
             {
                 $statistics_view_count = $statistics['viewCount'];
             }
         }
-        
+
 
         // duration
-        
-        $media = $xml->children('http://search.yahoo.com/mrss/');         
-        
+
+        $media = $xml->children('http://search.yahoo.com/mrss/');
+
         $yt = $media->children('http://gdata.youtube.com/schemas/2007');
-        
+
         if(!empty($yt->duration))
         {
             $duration = $yt->duration->attributes();
@@ -66,11 +66,11 @@ class Video extends AbstractVideo
 
 
         // author
-        
+
         $author = $xml->author;
 
         // ----------
-        
+
         // basics
 
         $this->id              = (string) $videoId;
@@ -78,7 +78,7 @@ class Video extends AbstractVideo
         $this->service         = "YouTube";
         $this->date            = strtotime($xml->published);
         $this->plays           = (int) $statistics_view_count;
-        
+
 
 
         // author
