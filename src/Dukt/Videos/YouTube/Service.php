@@ -17,6 +17,13 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
+    public function supportsRefresh()
+    {
+        return true;
+    }
+
+    // --------------------------------------------------------------------
+
     public function getDefaultParameters()
     {
         $settings = array_merge(

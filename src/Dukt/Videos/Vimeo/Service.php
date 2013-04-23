@@ -19,6 +19,13 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
+    public function supportsRefresh()
+    {
+        return false;
+    }
+
+    // --------------------------------------------------------------------
+
     public function video($opts)
     {
         // authentication required
@@ -28,7 +35,7 @@ class Service extends AbstractService
         }
 
         $api = $this->api();
-        
+
         $method = 'vimeo.videos.getInfo';
 
         $params = array();
@@ -38,7 +45,7 @@ class Service extends AbstractService
 
 
         $r = $api->call($method, $params);
-        
+
         $video->instantiate($r->video[0]);
 
 
@@ -56,7 +63,7 @@ class Service extends AbstractService
         }
 
         $api = $this->api();
-        
+
         $method = 'vimeo.videos.getLikes';
 
         $query = array();
@@ -64,7 +71,7 @@ class Service extends AbstractService
 
         if(isset($params['page']))
         {
-            $query['page'] = $params['page'];    
+            $query['page'] = $params['page'];
         }
 
         if(isset($params['perPage']))
@@ -74,7 +81,7 @@ class Service extends AbstractService
 
         $r = $api->call($method, $query);
 
-        return $this->extractVideos($r);     
+        return $this->extractVideos($r);
     }
 
     // --------------------------------------------------------------------
@@ -88,7 +95,7 @@ class Service extends AbstractService
         }
 
         $api = $this->api();
-        
+
         $method = 'vimeo.videos.getUploaded';
 
         $query = array();
@@ -98,11 +105,11 @@ class Service extends AbstractService
 
         $r = $api->call($method, $query);
 
-        return $this->extractVideos($r);       
+        return $this->extractVideos($r);
     }
-    
+
     // --------------------------------------------------------------------
-    
+
     public function search($params = array())
     {
         // authentication required
@@ -112,7 +119,7 @@ class Service extends AbstractService
         }
 
         $api = $this->api();
-        
+
         $method = 'vimeo.videos.search';
 
         $query = array();
@@ -123,7 +130,7 @@ class Service extends AbstractService
 
         $r = $api->call($method, $query);
 
-        return $this->extractVideos($r);   
+        return $this->extractVideos($r);
     }
 
     // --------------------------------------------------------------------
@@ -137,7 +144,7 @@ class Service extends AbstractService
         }
 
         $api = $this->api();
-        
+
         $method = 'vimeo.people.getInfo';
 
         $params = array();
@@ -183,7 +190,7 @@ class Service extends AbstractService
 
         return $video_id;
     }
-    
+
     // --------------------------------------------------------------------
 
     public function setProvider(\OAuth\Provider\Vimeo $provider)
@@ -197,7 +204,7 @@ class Service extends AbstractService
     {
 
     }
-    
+
     // --------------------------------------------------------------------
 
     function isFavorite($params)
@@ -209,7 +216,7 @@ class Service extends AbstractService
         }
 
         $api = $this->api();
-        
+
         $method = 'vimeo.videos.getInfo';
 
         $params['video_id'] = $params['id'];
@@ -242,7 +249,7 @@ class Service extends AbstractService
         }
 
         $api = $this->api();
-        
+
         $method = 'vimeo.videos.setLike';
 
         $params['video_id'] = $params['id'];
@@ -250,7 +257,7 @@ class Service extends AbstractService
 
         $r = $api->call($method, $params);
     }
-    
+
     // --------------------------------------------------------------------
 
     /**
@@ -269,7 +276,7 @@ class Service extends AbstractService
         }
 
         $api = $this->api();
-        
+
         $method = 'vimeo.videos.setLike';
 
         $params['video_id'] = $params['id'];
@@ -289,7 +296,7 @@ class Service extends AbstractService
         }
 
         $api = $this->api();
-        
+
         $method = 'vimeo.albums.getAll';
 
         $query = array();
@@ -299,7 +306,7 @@ class Service extends AbstractService
 
         $r = $api->call($method, $query);
 
-        return $this->extractCollections($r); 
+        return $this->extractCollections($r);
         //return $r;
     }
 
@@ -315,7 +322,7 @@ class Service extends AbstractService
         }
 
         $api = $this->api();
-        
+
         $method = 'vimeo.albums.getVideos';
 
         $query = array();
@@ -326,7 +333,7 @@ class Service extends AbstractService
 
         $r = $api->call($method, $query);
 
-        return $this->extractVideos($r); 
+        return $this->extractVideos($r);
         //return $r;
     }
 
@@ -341,7 +348,7 @@ class Service extends AbstractService
         }
 
         $api = $this->api();
-        
+
         $method = 'vimeo.albums.create';
 
         $query = array();
@@ -365,7 +372,7 @@ class Service extends AbstractService
         }
 
         $api = $this->api();
-        
+
         $method = 'vimeo.albums.delete';
 
         $query = array();
@@ -388,7 +395,7 @@ class Service extends AbstractService
         }
 
         $api = $this->api();
-        
+
         $method = 'vimeo.albums.addVideo';
 
         $query = array();
@@ -412,7 +419,7 @@ class Service extends AbstractService
         }
 
         $api = $this->api();
-        
+
         $method = 'vimeo.albums.removeVideo';
 
         $query = array();
