@@ -46,16 +46,18 @@ abstract class AbstractService implements ServiceInterface
     public function getDefaultParameters()
     {
         return array(
-                'clientId' => '',
-                'clientSecret' => ''
+                'clientId' => array(
+                        'required' => true,
+                        'label'    => 'Client ID',
+                        'default'    => ''
+                    ),
+                'clientSecret' => array(
+                        'required' => true,
+                        'label'    => 'Client Secret',
+                        'default'    => ''
+                    )
             );
-    }
 
-    public function getExtraParameters()
-    {
-        $settings = array();
-
-        return $settings;
     }
 
     // --------------------------------------------------------------------

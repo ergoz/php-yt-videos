@@ -26,31 +26,17 @@ class Service extends AbstractService
 
     public function getDefaultParameters()
     {
-        $settings = array_merge(
-            parent::getDefaultParameters(),
-            $this->getDefaultExtraParameters()
-        );
+        $parentSettings = parent::getDefaultParameters();
 
-        return $settings;
-    }
-
-    public function getDefaultExtraParameters()
-    {
-        $settings['developerKey'] = "";
-
-        return $settings;
-    }
-
-    public function getExtraParameters()
-    {
         $settings = array(
                 'developerKey' => array(
                         'required' => true,
-                        'label' => 'Developer Key'
+                        'label'    => 'Developer Key',
+                        'default'    => ''
                     )
             );
 
-        return $settings;
+        return array_merge($parentSettings, $settings);
     }
 
     // --------------------------------------------------------------------
@@ -483,7 +469,6 @@ class Service extends AbstractService
             $params['key'] = $developerKey;
             $params['v'] = 2;
         }
-
 
         $url = 'https://gdata.youtube.com/feeds/api/'.$url;
 
