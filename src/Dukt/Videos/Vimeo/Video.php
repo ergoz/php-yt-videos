@@ -12,17 +12,18 @@ class Video extends AbstractVideo
     {
         // basics
 
-        $this->id           = $response->id;
-        $this->url          = 'http://vimeo.com/'.$response->id;
-        $this->service      = "Vimeo";
-        $this->serviceSlug  = "vimeo";
-        $this->serviceClass = "Vimeo";
-        $this->serviceName  = "Vimeo";
-        $this->date         = (string) strtotime($response->upload_date);
-        $this->plays        = $response->number_of_plays;
-        $this->duration     = $response->duration;
-        $this->title        = $response->title;
-        $this->description  = $response->description;
+        $this->id              = $response->id;
+        $this->url             = 'http://vimeo.com/'.$response->id;
+        $this->service         = "Vimeo";
+        $this->serviceSlug     = "vimeo";
+        $this->serviceClass    = "Vimeo";
+        $this->serviceName     = "Vimeo";
+        $this->date            = (string) strtotime($response->upload_date);
+        $this->plays           = $response->number_of_plays;
+        $this->durationSeconds = $response->duration;
+        $this->duration        = $this->getDuration("%m:%s");
+        $this->title           = $response->title;
+        $this->description     = $response->description;
 
 
         // author
