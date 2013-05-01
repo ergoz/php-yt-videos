@@ -301,8 +301,8 @@ class Service extends AbstractService
 
         $query = array();
         $query['full_response'] = 1;
-        $query['page'] = $params['page'];
-        $query['per_page'] = $params['perPage'];
+        // $query['page'] = $params['page'];
+        // $query['per_page'] = $params['perPage'];
 
         $r = $api->call($method, $query);
 
