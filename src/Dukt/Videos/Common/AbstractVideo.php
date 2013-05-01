@@ -9,9 +9,13 @@ abstract class AbstractVideo implements VideoInterface
     public $id;
     public $url;
     public $service;
+    public $serviceSlug;
+    public $serviceClass;
+    public $serviceName;
     public $date;
     public $plays;
     public $duration;
+    public $durationSeconds;
     public $authorName;
     public $authorUrl;
     public $authorUsername;
@@ -68,7 +72,8 @@ abstract class AbstractVideo implements VideoInterface
      */
     public function getDuration($format = false)
     {
-        $sec = $this->duration;
+        $sec = $this->durationSeconds;
+
         $padHours = true;
 
         $hms = "";
@@ -96,7 +101,7 @@ abstract class AbstractVideo implements VideoInterface
         }
         else
         {
-            $r = $this->duration;
+            $r = $this->durationSeconds;
         }
 
         return $r;

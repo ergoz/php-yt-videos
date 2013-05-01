@@ -58,10 +58,15 @@ class Video extends AbstractVideo
 
         $yt = $media->children('http://gdata.youtube.com/schemas/2007');
 
-        if(!empty($yt->duration))
+        $durationAttributes = $yt->duration->attributes();
+
+        if(isset($durationAttributes))
         {
             $duration = $yt->duration->attributes();
-            $this->duration        = (int) $duration;
+
+            $this->durationSeconds = (int) $duration;
+
+            $this->duration = $this->getDuration("%m:%s");
         }
 
 
@@ -76,6 +81,9 @@ class Video extends AbstractVideo
         $this->id              = (string) $videoId;
         $this->url             = 'http://youtu.be/'.$videoId;
         $this->service         = "YouTube";
+        $this->serviceSlug     = "youtube";
+        $this->serviceClass    = "YouTube";
+        $this->serviceName     = "YouTube";
         $this->date            = strtotime($xml->published);
         $this->plays           = (int) $statistics_view_count;
 

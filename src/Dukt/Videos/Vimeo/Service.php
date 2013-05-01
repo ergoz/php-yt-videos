@@ -289,6 +289,7 @@ class Service extends AbstractService
 
     public function playlists($params = array())
     {
+
         // authentication required
 
         if(!$this->provider) {

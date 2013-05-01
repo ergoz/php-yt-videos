@@ -12,14 +12,17 @@ class Video extends AbstractVideo
     {
         // basics
 
-        $this->id          = $response->id;
-        $this->url         = 'http://vimeo.com/'.$response->id;
-        $this->service     = "Vimeo";
-        $this->date        = (string) strtotime($response->upload_date);
-        $this->plays       = $response->number_of_plays;
-        $this->duration    = $response->duration;
-        $this->title       = $response->title;
-        $this->description = $response->description;
+        $this->id           = $response->id;
+        $this->url          = 'http://vimeo.com/'.$response->id;
+        $this->service      = "Vimeo";
+        $this->serviceSlug  = "vimeo";
+        $this->serviceClass = "Vimeo";
+        $this->serviceName  = "Vimeo";
+        $this->date         = (string) strtotime($response->upload_date);
+        $this->plays        = $response->number_of_plays;
+        $this->duration     = $response->duration;
+        $this->title        = $response->title;
+        $this->description  = $response->description;
 
 
         // author
@@ -30,12 +33,12 @@ class Video extends AbstractVideo
 
 
         // thumbnails
-        
+
         $this->thumbnail       = (string) $response->thumbnails->thumbnail[0]->_content;
         $this->thumbnailLarge  = end($response->thumbnails->thumbnail)->_content;
-        
+
         $this->thumbnails = array();
-        
+
         foreach($response->thumbnails->thumbnail as $k => $thumbnail)
         {
             array_push($this->thumbnails, $thumbnail->_content);
