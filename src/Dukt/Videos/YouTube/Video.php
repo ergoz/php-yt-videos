@@ -62,11 +62,14 @@ class Video extends AbstractVideo
 
         if(isset($durationAttributes))
         {
-            $duration = $yt->duration->attributes();
+            if(!empty($yt->duration))
+            {
+                $duration = $yt->duration->attributes();
 
-            $this->durationSeconds = (int) $duration;
+                $this->durationSeconds = (int) $duration;
 
-            $this->duration = $this->getDuration("%m:%s");
+                $this->duration = $this->getDuration("%m:%s");
+            }
         }
 
 
