@@ -109,6 +109,24 @@ abstract class AbstractVideo implements VideoInterface
 
     public function getEmbed($options = array())
     {
+        $boolParameters = array('disable_size', 'autoplay', 'loop');
+
+        $boolParameters = array_merge($boolParameters, $this->boolParameters);
+
+        foreach($options as $k => $o) {
+            foreach($boolParameters as $k2) {
+                if($k == $k2) {
+                    if($o === 1 || $o === "1" || $o === true || $o === "yes") {
+                        $options[$k] = 1;
+                    }
+
+                    if($o === 0 || $o === "0" || $o === false || $o === "no") {
+                        $options[$k] = 0;
+                    }
+                }
+            }
+        }
+
         $queryMark = '?';
 
         if(strpos($this->embedUrl, "?") !== false) {
@@ -117,18 +135,25 @@ abstract class AbstractVideo implements VideoInterface
 
         $extraParameters = "";
 
-        if(isset($options['width']))
-        {
-            $width = $options['width'];
-            $extraParameters .= 'width="'.$width.'" ';
-            unset($options['width']);
+        $disableSize = false;
+
+        if(isset($options['disable_size'])) {
+            $disableSize = $options['disable_size'];
         }
 
-        if(isset($options['height']))
+        if(!$disableSize)
         {
-            $height = $options['height'];
-            $extraParameters .= 'height="'.$height.'" ';
-            unset($options['height']);
+            if(isset($options['width'])) {
+                $width = $options['width'];
+                $extraParameters .= 'width="'.$width.'" ';
+                unset($options['width']);
+            }
+
+            if(isset($options['height'])) {
+                $height = $options['height'];
+                $extraParameters .= 'height="'.$height.'" ';
+                unset($options['height']);
+            }
         }
 
         $options = http_build_query($options);

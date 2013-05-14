@@ -7,9 +7,11 @@ use Dukt\Videos\Common\AbstractVideo;
 class Video extends AbstractVideo
 {
     var $embedUrl =  "http://player.vimeo.com/video/%s";
+    var $boolParameters = array('portrait', 'title', 'byline');
 
     public function instantiate($response)
     {
+        // var_dump($response);
         // basics
 
         $this->id              = $response->id;
@@ -28,6 +30,7 @@ class Video extends AbstractVideo
 
         // author
 
+        $this->authorId      = (string) $response->owner->id;
         $this->authorName      = (string) $response->owner->display_name;
         $this->authorUrl       = (string) $response->owner->profileurl;
         $this->authorUsername  = (string) $response->owner->username;

@@ -7,9 +7,11 @@ use Dukt\Videos\Common\AbstractVideo;
 class Video extends AbstractVideo
 {
     protected $embedUrl =  "http://www.youtube.com/embed/%s?wmode=transparent";
+    var $boolParameters = array('autohide', 'cc_load_policy', 'controls', 'disablekb', 'fs', 'modestbranding', 'rel', 'showinfo');
 
     public function instantiate($xml)
     {
+        //var_dump($xml);
         // extract videoId
 
         $videoUrl = (string) $xml->link[0]->attributes()->href[0];
@@ -58,20 +60,16 @@ class Video extends AbstractVideo
 
         $yt = $media->children('http://gdata.youtube.com/schemas/2007');
 
-        $durationAttributes = $yt->duration->attributes();
-
-        if(isset($durationAttributes))
+        if(isset($yt->duration))
         {
-            if(!empty($yt->duration))
-            {
-                $duration = $yt->duration->attributes();
+            $durationAttributes = $yt->duration->attributes();
 
-                $this->durationSeconds = (int) $duration;
+            $duration = $durationAttributes;
 
-                $this->duration = $this->getDuration("%m:%s");
-            }
+            $this->durationSeconds = (int) $duration;
+
+            $this->duration = $this->getDuration("%m:%s");
         }
-
 
         // author
 
@@ -93,6 +91,9 @@ class Video extends AbstractVideo
 
 
         // author
+
+        $this->authorId      = (string) $author->uri;
+        $this->authorId     = substr($this->authorId, strrpos($this->authorId, '/') + 1);
 
         $this->authorName      = (string) $author->name;
         $this->authorUrl       = "http://youtube.com/user/".$author->name;

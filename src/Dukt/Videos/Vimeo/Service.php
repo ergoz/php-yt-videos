@@ -26,6 +26,13 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
+    public function supportsOwnVideoLike()
+    {
+        return false;
+    }
+
+    // --------------------------------------------------------------------
+
     public function video($opts)
     {
         // authentication required
@@ -151,7 +158,7 @@ class Service extends AbstractService
 
         $r = $api->call($method, $params);
 
-        return $r;
+        return $this->extractUserInfos($r);
     }
 
     // --------------------------------------------------------------------
@@ -223,9 +230,10 @@ class Service extends AbstractService
 
         $r = $api->call($method, $params);
 
-        if($r->video[0]->is_like == 1)
-        {
-            return true;
+        if (isset($r->video[0]->is_like)) {
+            if ($r->video[0]->is_like == 1) {
+                return true;
+            }
         }
 
         return false;
@@ -487,4 +495,17 @@ class Service extends AbstractService
 
         return $collections;
     }
+
+    // --------------------------------------------------------------------
+
+    private function extractUserInfos($r)
+    {
+        $response = $r->person;
+
+        $userInfos = new UserInfos();
+        $userInfos->instantiate($response);
+
+        return $userInfos;
+    }
 }
+

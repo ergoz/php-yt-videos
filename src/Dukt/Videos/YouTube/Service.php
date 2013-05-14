@@ -24,6 +24,13 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
+    public function supportsOwnVideoLike()
+    {
+        return true;
+    }
+
+    // --------------------------------------------------------------------
+
     public function getDefaultParameters()
     {
         $parentSettings = parent::getDefaultParameters();
@@ -66,7 +73,19 @@ class Service extends AbstractService
 
         // request
 
-        $url = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&'.http_build_query(array(
+        $r = $this->apiCall('users/default');
+
+        $userInfos = new UserInfos();
+
+        $userInfos->instantiate($r);
+
+
+        return $userInfos;
+    }
+
+    public function userInfos_deprecated()
+    {
+        $url = 'https://gdata.youtube.com/feeds/api/users/default?alt=json&'.http_build_query(array(
             'access_token' => $this->provider->token->access_token,
 
         ));
@@ -460,7 +479,6 @@ class Service extends AbstractService
 
     private function apiCall($url, $params = array(), $method='get')
     {
-
         $developerKey = $this->getDeveloperKey();
 
         if(is_array($params))
@@ -544,7 +562,6 @@ class Service extends AbstractService
         return $videos;
     }
 
-
     // --------------------------------------------------------------------
 
     private function extractCollections($r)
@@ -560,6 +577,19 @@ class Service extends AbstractService
         }
 
         return $collections;
+    }
+
+    // --------------------------------------------------------------------
+
+
+    // --------------------------------------------------------------------
+
+    private function extractUserInfos($response)
+    {
+        $userInfos = new UserInfos();
+        $userInfos->instantiate($response);
+
+        return $userInfos;
     }
 
     // --------------------------------------------------------------------
