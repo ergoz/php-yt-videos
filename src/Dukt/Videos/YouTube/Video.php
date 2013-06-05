@@ -11,13 +11,33 @@ class Video extends AbstractVideo
 
     public function instantiate($xml)
     {
-        //var_dump($xml);
         // extract videoId
 
-        $videoUrl = (string) $xml->link[0]->attributes()->href[0];
+        $videoUrl = false;
+
+        $links = $xml->link;
+
+        // var_dump($xml);
+        // echo '<hr />';
+        foreach($links as $link) {
+            if($link['rel'] == 'alternate') {
+                $videoUrl = (string) $link['href'];
+            }
+        }
+        // var_dump($xml);
+        // echo $videoUrl;
+        // echo '<hr />';
+
+        $videoId = substr($videoUrl, (strrpos($videoUrl, '?v=') + 3));
+
+        if(strpos($videoId, "&") !== false) {
+            $videoId = substr($videoId, 0, strpos($videoId, "&"));
+        }
+
+
 
         $this->systemId = (string) $xml->id;
-
+        //var_dump($this->systemId);
         $playlistEntryId = $this->systemId;
 
         $playlistEntryId = substr($playlistEntryId, strpos($playlistEntryId, 'playlist:') + 9);
@@ -32,7 +52,7 @@ class Video extends AbstractVideo
             $playlistEntryId = NULL;
         }
 
-        $videoId = Service::getVideoId($videoUrl);
+        //$videoId = Service::getVideoId($videoUrl);
 
         $yt = $xml->children('http://gdata.youtube.com/schemas/2007');
         $media = $xml->children('http://search.yahoo.com/mrss/');
