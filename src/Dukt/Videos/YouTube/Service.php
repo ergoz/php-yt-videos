@@ -135,7 +135,6 @@ class Service extends AbstractService
 
         $r = $this->apiCall('videos/'.$opts['id'], $query);
 
-
         $video = new Video();
 
         $video->instantiate($r);

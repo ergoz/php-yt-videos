@@ -220,6 +220,8 @@ abstract class AbstractService implements ServiceInterface
 
         $params['id'] = $videoId;
 
+
+
         $video = $this->video($params);
 
         return $video;

@@ -14,9 +14,13 @@ class Video extends AbstractVideo
         //var_dump($xml);
         // extract videoId
 
-        $videoUrl = (string) $xml->link[0]->attributes()->href[0];
-
         $this->systemId = (string) $xml->id;
+
+        if(empty($this->systemId)) {
+            return null;
+        }
+
+        $videoUrl = (string) $xml->link[0]->attributes()->href[0];
 
         $playlistEntryId = $this->systemId;
 
