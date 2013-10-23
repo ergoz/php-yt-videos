@@ -6,7 +6,7 @@ use Dukt\Videos\Common\AbstractVideo;
 
 class Video extends AbstractVideo
 {
-    var $embedUrl =  "http://player.vimeo.com/video/%s";
+    var $embedFormat =  "http://player.vimeo.com/video/%s";
     var $boolParameters = array('portrait', 'title', 'byline');
 
     public function instantiate($response)
@@ -21,12 +21,11 @@ class Video extends AbstractVideo
         $this->serviceClass    = "Vimeo";
         $this->serviceName     = "Vimeo";
         $this->date            = (string) strtotime($response->upload_date);
-        $this->plays           = $response->number_of_plays;
+        $this->plays           = (isset($response->number_of_plays) ? $response->number_of_plays : '');
         $this->durationSeconds = $response->duration;
         $this->duration        = $this->getDuration("%m:%s");
         $this->title           = $response->title;
         $this->description     = $response->description;
-
 
         // author
 
@@ -38,7 +37,7 @@ class Video extends AbstractVideo
 
         // thumbnails
 
-        $this->thumbnail       = (string) $response->thumbnails->thumbnail[0]->_content;
+        $this->thumbnail       = (string) $response->thumbnails->thumbnail[1]->_content;
         $this->thumbnailLarge  = end($response->thumbnails->thumbnail)->_content;
 
         $this->thumbnails = array();
@@ -47,5 +46,9 @@ class Video extends AbstractVideo
         {
             array_push($this->thumbnails, $thumbnail->_content);
         }
+
+
+        $this->embedUrl = $this->getEmbedUrl();
+        $this->embedHtml = $this->getEmbedHtml();
     }
 }

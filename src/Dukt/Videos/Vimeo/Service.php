@@ -9,12 +9,89 @@ use Dukt\Videos\Common\AbstractService;
 class Service extends AbstractService
 {
     public $providerClass = "Vimeo";
+    public $name = "Vimeo";
+    public $handle = "vimeo";
 
     // --------------------------------------------------------------------
 
-    public function getName()
+    public function getSections()
     {
-        return 'Vimeo';
+        $sections = array(
+            array(
+                'name' => "Library",
+                'handle' => "library",
+                'childs' => array(
+                    array(
+                        'name' => "Uploads",
+                        'handle' => "uploads",
+                        'method' => 'uploads',
+                        'url' => '/'.$this->handle.'/uploads',
+                        'icon' => 'uploads'
+                    ),
+                    array(
+                        'name' => "Favorites",
+                        'handle' => "favorites",
+                        'method' => 'favorites',
+                        'url' => '/'.$this->handle.'/favorites',
+                        'icon' => 'favorites'
+                    ),
+                ),
+            )
+        );
+
+        // albums section
+
+        $albums = $this->albums();
+
+        $section = array(
+            'name' => "Albums",
+            'handle' => "albums",
+            'childs' => array(),
+        );
+
+        foreach($albums as $album) {
+
+            $child = array(
+                'method' => 'album',
+                'icon' => 'menu',
+                'name' => $album->title,
+                'id' => $album->id,
+                'url' => '/'.$this->handle.'/albums/'.$album->id
+            );
+
+            array_push($section['childs'], $child);
+        }
+
+        array_push($sections, $section);
+
+
+        // channels section
+
+        $channels = $this->channels();
+
+
+        $section = array(
+            'name' => "Channels",
+            'handle' => "channels",
+            'childs' => array(),
+        );
+
+        foreach($channels as $channel) {
+
+            $child = array(
+                'method' => 'channel',
+                'icon' => 'menu',
+                'name' => $channel->title,
+                'id' => $channel->id,
+                'url' => '/'.$this->handle.'/channels/'.$channel->id
+            );
+
+            array_push($section['childs'], $child);
+        }
+
+        array_push($sections, $section);
+
+        return $sections;
     }
 
     // --------------------------------------------------------------------
@@ -61,6 +138,54 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
+    public function channels($params = array())
+    {
+
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $api = $this->api();
+
+        $method = 'vimeo.channels.getAll';
+
+        $query = $this->queryFromParams($params);
+
+        $r = $api->call($method, $query);
+
+
+        $collections = $this->extractCollections($r->channels->channel, 'channel');
+
+        return $collections;
+    }
+
+    // --------------------------------------------------------------------
+
+    public function channel($params = array())
+    {
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $api = $this->api();
+
+        $method = 'vimeo.channels.getVideos';
+
+        $query = $this->queryFromParams($params);
+        $query['channel_id'] = $params['id'];
+
+        $r = $api->call($method, $query);
+
+        return $this->extractVideos($r);
+        //return $r;
+    }
+
+    // --------------------------------------------------------------------
+
     public function favorites($params = array())
     {
         // authentication required
@@ -73,18 +198,7 @@ class Service extends AbstractService
 
         $method = 'vimeo.videos.getLikes';
 
-        $query = array();
-        $query['full_response'] = 1;
-
-        if(isset($params['page']))
-        {
-            $query['page'] = $params['page'];
-        }
-
-        if(isset($params['perPage']))
-        {
-            $query['per_page'] = $params['perPage'];
-        }
+        $query = $this->queryFromParams($params);
 
         $r = $api->call($method, $query);
 
@@ -105,10 +219,9 @@ class Service extends AbstractService
 
         $method = 'vimeo.videos.getUploaded';
 
-        $query = array();
-        $query['full_response'] = 1;
-        $query['page'] = $params['page'];
-        $query['per_page'] = $params['perPage'];
+
+        $query = $this->queryFromParams($params);
+
 
         $r = $api->call($method, $query);
 
@@ -129,15 +242,31 @@ class Service extends AbstractService
 
         $method = 'vimeo.videos.search';
 
-        $query = array();
-        $query['full_response'] = 1;
-        $query['page'] = $params['page'];
-        $query['per_page'] = $params['perPage'];
+        $query = $this->queryFromParams($params);
+
         $query['query'] = $params['q'];
 
         $r = $api->call($method, $query);
 
         return $this->extractVideos($r);
+    }
+
+    public function queryFromParams($params = array())
+    {
+        $query = array();
+        $query['full_response'] = 1;
+
+        if(isset($params['page']))
+        {
+            $query['page'] = $params['page'];
+        }
+
+        if(isset($params['perPage']))
+        {
+            $query['per_page'] = $params['perPage'];
+        }
+
+        return $query;
     }
 
     // --------------------------------------------------------------------
@@ -295,6 +424,29 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
+    public function albums($params = array())
+    {
+
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $api = $this->api();
+
+        $method = 'vimeo.albums.getAll';
+
+        $query = $this->queryFromParams();
+
+        $r = $api->call($method, $query);
+
+        return $this->extractCollections($r->albums->album, 'album');
+        //return $r;
+    }
+
+    // --------------------------------------------------------------------
+
     public function playlists($params = array())
     {
 
@@ -308,21 +460,18 @@ class Service extends AbstractService
 
         $method = 'vimeo.albums.getAll';
 
-        $query = array();
-        $query['full_response'] = 1;
-        // $query['page'] = $params['page'];
-        // $query['per_page'] = $params['perPage'];
+        $query = $this->queryFromParams($params);
 
         $r = $api->call($method, $query);
 
-        return $this->extractCollections($r);
+        return $this->extractCollections($r->albums->album, 'album');
         //return $r;
     }
 
 
     // --------------------------------------------------------------------
 
-    public function playlistVideos($params = array())
+    public function album($params = array())
     {
         // authentication required
 
@@ -334,11 +483,8 @@ class Service extends AbstractService
 
         $method = 'vimeo.albums.getVideos';
 
-        $query = array();
+        $query = $this->queryFromParams($params);
         $query['album_id'] = $params['id'];
-        $query['full_response'] = 1;
-        $query['page'] = $params['page'];
-        $query['per_page'] = $params['perPage'];
 
         $r = $api->call($method, $query);
 
@@ -479,16 +625,21 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
-    private function extractCollections($r)
+    private function extractCollections($r, $type='album')
     {
-        $responseCollections = $r->albums->album;
+        $responseCollections = $r;
 
         $collections = array();
 
+
+        if(count($responseCollections) == 1) {
+            $responseCollections = array($responseCollections);
+        }
         foreach($responseCollections as $responseCollection)
         {
             $collection = new Collection();
-            $collection->instantiate($responseCollection);
+
+            $collection->{'instantiate'.ucwords($type)}($responseCollection);
 
             array_push($collections, $collection);
         }

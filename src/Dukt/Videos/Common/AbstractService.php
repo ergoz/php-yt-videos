@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 abstract class AbstractService implements ServiceInterface
 {
     public $provider;
+    public $name;
+    public $handle;
 
     protected $parameters;
 
@@ -39,6 +41,30 @@ abstract class AbstractService implements ServiceInterface
         Helper::initialize($this, $parameters);
 
         return $this;
+    }
+
+    // --------------------------------------------------------------------
+
+    public function getVideos($path)
+    {
+        $sectionChild = false;
+
+        foreach($this->getSections() as $section) {
+            foreach($section['childs'] as $child) {
+                if($child['url'] == $path) {
+                    $sectionChild = $child;
+                }
+            }
+        }
+
+        return $this->{($sectionChild['method'])}($sectionChild);
+    }
+
+    // --------------------------------------------------------------------
+
+    public function getName()
+    {
+        return $this->name;
     }
 
     // --------------------------------------------------------------------

@@ -6,7 +6,7 @@ use Dukt\Videos\Common\AbstractCollection;
 
 class Collection extends AbstractCollection
 {
-    public function instantiate($response)
+    public function instantiateAlbum($response)
     {
         $this->id = $response->id;
         $this->url = $response->url[0];
@@ -14,5 +14,11 @@ class Collection extends AbstractCollection
         $this->totalVideos = $response->total_videos;
     }
 
-
+    public function instantiateChannel($response)
+    {
+        $this->id = $response->id;
+        $this->url = $response->url[0];
+        $this->title = $response->name;
+        $this->totalVideos = $response->total_videos;
+    }
 }

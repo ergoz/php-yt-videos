@@ -7,12 +7,95 @@ use Dukt\Videos\Common\AbstractService;
 class Service extends AbstractService
 {
     public $providerClass = "YouTube";
+    public $name = "YouTube";
+    public $handle = "youtube";
 
     // --------------------------------------------------------------------
 
-    public function getName()
+    public function getSections()
     {
-        return 'YouTube';
+        $sections = array(
+            array(
+                'name' => "Library",
+                'handle' => "library",
+                'childs' => array(
+                    array(
+                        'name' => "Explore",
+                        'handle' => "explore",
+                        'method' => 'explore',
+                        'url' => '/'.$this->handle.'/explore',
+                        'icon' => 'explore'
+                    ),
+                    array(
+                        'name' => "Uploads",
+                        'handle' => "uploads",
+                        'method' => 'uploads',
+                        'url' => '/'.$this->handle.'/uploads',
+                        'icon' => 'uploads'
+                    ),
+                    array(
+                        'name' => "Favorites",
+                        'handle' => "favorites",
+                        'method' => 'favorites',
+                        'url' => '/'.$this->handle.'/favorites',
+                        'icon' => 'favorites'
+                    ),
+                    array(
+                        'name' => "History",
+                        'handle' => "history",
+                        'method' => 'history',
+                        'url' => '/'.$this->handle.'/history',
+                        'icon' => 'history'
+                    ),
+                ),
+            )
+        );
+
+        // playlists section
+
+        $playlists = $this->playlists();
+
+        $section = array(
+            'name' => "Playlists",
+            'handle' => "playlists",
+            'childs' => array(),
+        );
+
+        foreach($playlists as $playlist) {
+
+            $child = array(
+                'method' => 'playlist',
+                'icon' => 'menu',
+                'name' => $playlist->title,
+                'id' => $playlist->id,
+                'totalVideos' => $playlist->totalVideos,
+                'videoUrl' => $playlist->url,
+                'url' => '/'.$this->handle.'/playlists/'.$playlist->id
+            );
+
+            array_push($section['childs'], $child);
+        }
+
+        array_push($sections, $section);
+
+        return $sections;
+    }
+
+    // --------------------------------------------------------------------
+
+    public function explore()
+    {
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $query = $this->queryFromParams();
+
+        $r = $this->apiCall('standardfeeds/most_popular', $query);
+
+        return $this->extractVideos($r);
     }
 
     // --------------------------------------------------------------------
@@ -219,24 +302,20 @@ class Service extends AbstractService
             return NULL;
         }
 
-        $query = array();
-
-        if(isset($params['page']) && isset($params['perPage']))
-        {
-            $startIndex = $params['page'];
-
-            if($startIndex > 1)
-            {
-                $startIndex = (($params['page'] - 1) * $params['perPage']) + 1;
-            }
-
-            $query = array(
-                'start-index' => $startIndex,
-                'max-results' => $params['perPage'],
-            );
-        }
+        $query = $this->queryFromParams($params);
 
         $r = $this->apiCall('users/default/favorites', $query);
+
+        return $this->extractVideos($r);
+    }
+
+    // --------------------------------------------------------------------
+
+    public function history($params = array())
+    {
+        $query = $this->queryFromParams($params);
+
+        $r = $this->apiCall('users/default/watch_history', $query);
 
         return $this->extractVideos($r);
     }
@@ -251,17 +330,7 @@ class Service extends AbstractService
             return NULL;
         }
 
-        $startIndex = $params['page'];
-
-        if($startIndex > 1)
-        {
-            $startIndex = (($params['page'] - 1) * $params['perPage']) + 1;
-        }
-
-        $query = array(
-            'start-index' => $startIndex,
-            'max-results' => $params['perPage']
-        );
+        $query = $this->queryFromParams($params);
 
         $r = $this->apiCall('users/default/uploads', $query);
 
@@ -279,18 +348,31 @@ class Service extends AbstractService
             return NULL;
         }
 
-        $startIndex = $params['page'];
 
-        if($startIndex > 1)
-        {
-            $startIndex = (($params['page'] - 1) * $params['perPage']) + 1;
-        }
+        // query
 
         $query = array(
-            'q' => $params['q'],
-            'start-index' => $startIndex,
-            'max-results' => $params['perPage'],
+            'q' => $params['q']
         );
+
+
+        // pagination
+
+        if(isset($params['page']) && $params['perPage']) {
+
+            $startIndex = $params['page'];
+
+            if($startIndex > 1)
+            {
+                $startIndex = (($params['page'] - 1) * $params['perPage']) + 1;
+            }
+
+            $query['start-index'] = $startIndex;
+            $query['max-results'] = $params['perPage'];
+        }
+
+
+        // api call
 
         $r = $this->apiCall('videos', $query);
 
@@ -303,7 +385,7 @@ class Service extends AbstractService
     public function playlists($params = array())
     {
         // authentication required
-
+        // var_dump($this->provider);
         if(!$this->provider) {
             return NULL;
         }
@@ -323,7 +405,7 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
-    public function playlistVideos($params = array())
+    public function playlist($params = array())
     {
         // authentication required
 
@@ -331,17 +413,37 @@ class Service extends AbstractService
             return NULL;
         }
 
-
-        $query = array(
-            'start-index' => $params['page'],
-            'max-results' => $params['perPage'],
-        );
+        $query = $this->queryFromParams($params);
 
         $r = $this->apiCall('playlists/'.$params['id'], $query);
 
         return $this->extractVideos($r);
 
         // return $r;
+    }
+
+    // --------------------------------------------------------------------
+
+    public function queryFromParams($params = array())
+    {
+        $query = array();
+
+        if(isset($params['page']) && isset($params['perPage']))
+        {
+            $startIndex = $params['page'];
+
+            if($startIndex > 1)
+            {
+                $startIndex = (($params['page'] - 1) * $params['perPage']) + 1;
+            }
+
+            $query = array(
+                'start-index' => $startIndex,
+                'max-results' => $params['perPage'],
+            );
+        }
+
+        return $query;
     }
 
     // --------------------------------------------------------------------
