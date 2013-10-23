@@ -107,7 +107,14 @@ abstract class AbstractVideo implements VideoInterface
         return $r;
     }
 
-    public function getEmbed($options = array())
+    public function getEmbedUrl()
+    {
+        $url = sprintf($this->embedFormat, $this->id);
+
+        return $url;
+    }
+
+    public function getEmbedHtml($options = array())
     {
         $boolParameters = array('disable_size', 'autoplay', 'loop');
 
@@ -129,7 +136,7 @@ abstract class AbstractVideo implements VideoInterface
 
         $queryMark = '?';
 
-        if(strpos($this->embedUrl, "?") !== false) {
+        if(strpos($this->embedFormat, "?") !== false) {
             $queryMark = "&";
         }
 
@@ -158,7 +165,7 @@ abstract class AbstractVideo implements VideoInterface
 
         $options = http_build_query($options);
 
-        $format = '<iframe src="'.$this->embedUrl.$queryMark.$options.'" '.$extraParameters.' frameborder="0" allowfullscreen="true" allowscriptaccess="true"></iframe>';
+        $format = '<iframe src="'.$this->embedFormat.$queryMark.$options.'" '.$extraParameters.' frameborder="0" allowfullscreen="true" allowscriptaccess="true"></iframe>';
 
         $embed = sprintf($format, $this->id);
 

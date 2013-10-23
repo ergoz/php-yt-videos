@@ -6,7 +6,7 @@ use Dukt\Videos\Common\AbstractVideo;
 
 class Video extends AbstractVideo
 {
-    protected $embedUrl =  "http://www.youtube.com/embed/%s?wmode=transparent";
+    protected $embedFormat =  "http://www.youtube.com/embed/%s?wmode=transparent";
     var $boolParameters = array('autohide', 'cc_load_policy', 'controls', 'disablekb', 'fs', 'modestbranding', 'rel', 'showinfo');
 
     public function instantiate($xml)
@@ -134,5 +134,9 @@ class Video extends AbstractVideo
 
         $this->title           = (string) $xml->title;
         $this->description     = (string) $media->group->description[0];
+
+
+        $this->embedUrl = $this->getEmbedUrl();
+        $this->embedHtml = $this->getEmbedHtml();
     }
 }
