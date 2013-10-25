@@ -55,17 +55,17 @@ abstract class AbstractService implements ServiceInterface
     public function getDefaultParameters()
     {
         return array(
-                'clientId' => array(
-                        'required' => true,
-                        'label'    => 'Client ID',
-                        'default'    => ''
-                    ),
-                'clientSecret' => array(
-                        'required' => true,
-                        'label'    => 'Client Secret',
-                        'default'    => ''
-                    )
-            );
+            'clientId' => array(
+                'required' => true,
+                'label'    => 'Client ID',
+                'default'    => ''
+            ),
+            'clientSecret' => array(
+                'required' => true,
+                'label'    => 'Client Secret',
+                'default'    => ''
+            )
+        );
 
     }
 
@@ -143,19 +143,13 @@ abstract class AbstractService implements ServiceInterface
         $token = unserialize($token);
         $token = (array) $token;
 
-        if(is_array($token))
-        {
-            if(count($token) > 0)
-            {
-                if(isset($token[0]))
-                {
-                    if($token[0] !== false)
-                    {
+        if(is_array($token)) {
+            if(count($token) > 0) {
+                if(isset($token[0])) {
+                    if($token[0] !== false) {
                         return $token;
                     }
-                }
-                else
-                {
+                } else {
                     return $token;
                 }
             }
@@ -171,15 +165,13 @@ abstract class AbstractService implements ServiceInterface
         try {
             $r = $this->favorites();
 
-            if($r)
-            {
+            if($r) {
                 return true;
             }
 
             return false;
 
-        } catch(\Exception $e)
-        {
+        } catch(\Exception $e) {
             return false;
         }
     }
@@ -206,8 +198,7 @@ abstract class AbstractService implements ServiceInterface
 
         $array = array();
 
-        if(isset($defaults[$method]))
-        {
+        if(isset($defaults[$method])) {
             $array = $defaults[$method];
         }
 
@@ -222,14 +213,11 @@ abstract class AbstractService implements ServiceInterface
 
         $videoId = $this->getVideoId($url);
 
-        if(!$videoId)
-        {
+        if(!$videoId) {
             throw new \Exception('Video not found with url given');
         }
 
         $params['id'] = $videoId;
-
-
 
         $video = $this->video($params);
 
