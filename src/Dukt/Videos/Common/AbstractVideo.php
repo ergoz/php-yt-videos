@@ -107,6 +107,11 @@ abstract class AbstractVideo implements VideoInterface
         return $r;
     }
 
+    public function getEmbed($options = array())
+    {
+        return $this->getEmbedHtml($options);
+    }
+
     public function getEmbedUrl()
     {
         $url = sprintf($this->embedFormat, $this->id);
