@@ -14,88 +14,6 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
-    public function getSections()
-    {
-        $sections = array(
-            array(
-                'name' => "Library",
-                'handle' => "library",
-                'childs' => array(
-                    array(
-                        'name' => "Uploads",
-                        'handle' => "uploads",
-                        'method' => 'uploads',
-                        'url' => '/'.$this->handle.'/uploads',
-                        'icon' => 'uploads'
-                    ),
-                    array(
-                        'name' => "Favorites",
-                        'handle' => "favorites",
-                        'method' => 'favorites',
-                        'url' => '/'.$this->handle.'/favorites',
-                        'icon' => 'favorites'
-                    ),
-                ),
-            )
-        );
-
-        // albums section
-
-        $albums = $this->albums();
-
-        $section = array(
-            'name' => "Albums",
-            'handle' => "albums",
-            'childs' => array(),
-        );
-
-        foreach($albums as $album) {
-
-            $child = array(
-                'method' => 'album',
-                'icon' => 'menu',
-                'name' => $album->title,
-                'id' => $album->id,
-                'url' => '/'.$this->handle.'/albums/'.$album->id
-            );
-
-            array_push($section['childs'], $child);
-        }
-
-        array_push($sections, $section);
-
-
-        // channels section
-
-        $channels = $this->channels();
-
-
-        $section = array(
-            'name' => "Channels",
-            'handle' => "channels",
-            'childs' => array(),
-        );
-
-        foreach($channels as $channel) {
-
-            $child = array(
-                'method' => 'channel',
-                'icon' => 'menu',
-                'name' => $channel->title,
-                'id' => $channel->id,
-                'url' => '/'.$this->handle.'/channels/'.$channel->id
-            );
-
-            array_push($section['childs'], $child);
-        }
-
-        array_push($sections, $section);
-
-        return $sections;
-    }
-
-    // --------------------------------------------------------------------
-
     public function supportsRefresh()
     {
         return false;
@@ -484,6 +402,7 @@ class Service extends AbstractService
         $method = 'vimeo.albums.getVideos';
 
         $query = $this->queryFromParams($params);
+
         $query['album_id'] = $params['id'];
 
         $r = $api->call($method, $query);

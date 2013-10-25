@@ -12,78 +12,7 @@ class Service extends AbstractService
 
     // --------------------------------------------------------------------
 
-    public function getSections()
-    {
-        $sections = array(
-            array(
-                'name' => "Library",
-                'handle' => "library",
-                'childs' => array(
-                    array(
-                        'name' => "Explore",
-                        'handle' => "explore",
-                        'method' => 'explore',
-                        'url' => '/'.$this->handle.'/explore',
-                        'icon' => 'explore'
-                    ),
-                    array(
-                        'name' => "Uploads",
-                        'handle' => "uploads",
-                        'method' => 'uploads',
-                        'url' => '/'.$this->handle.'/uploads',
-                        'icon' => 'uploads'
-                    ),
-                    array(
-                        'name' => "Favorites",
-                        'handle' => "favorites",
-                        'method' => 'favorites',
-                        'url' => '/'.$this->handle.'/favorites',
-                        'icon' => 'favorites'
-                    ),
-                    array(
-                        'name' => "History",
-                        'handle' => "history",
-                        'method' => 'history',
-                        'url' => '/'.$this->handle.'/history',
-                        'icon' => 'history'
-                    ),
-                ),
-            )
-        );
-
-        // playlists section
-
-        $playlists = $this->playlists();
-
-        $section = array(
-            'name' => "Playlists",
-            'handle' => "playlists",
-            'childs' => array(),
-        );
-
-        foreach($playlists as $playlist) {
-
-            $child = array(
-                'method' => 'playlist',
-                'icon' => 'menu',
-                'name' => $playlist->title,
-                'id' => $playlist->id,
-                'totalVideos' => $playlist->totalVideos,
-                'videoUrl' => $playlist->url,
-                'url' => '/'.$this->handle.'/playlists/'.$playlist->id
-            );
-
-            array_push($section['childs'], $child);
-        }
-
-        array_push($sections, $section);
-
-        return $sections;
-    }
-
-    // --------------------------------------------------------------------
-
-    public function explore()
+    public function explore($params = array())
     {
         // authentication required
 
@@ -91,7 +20,9 @@ class Service extends AbstractService
             return NULL;
         }
 
-        $query = $this->queryFromParams();
+        $query = $this->queryFromParams($params);
+
+        // var_dump($query);
 
         $r = $this->apiCall('standardfeeds/most_popular', $query);
 
@@ -351,25 +282,9 @@ class Service extends AbstractService
 
         // query
 
-        $query = array(
-            'q' => $params['q']
-        );
+        $query = $this->queryFromParams($params);
 
-
-        // pagination
-
-        if(isset($params['page']) && $params['perPage']) {
-
-            $startIndex = $params['page'];
-
-            if($startIndex > 1)
-            {
-                $startIndex = (($params['page'] - 1) * $params['perPage']) + 1;
-            }
-
-            $query['start-index'] = $startIndex;
-            $query['max-results'] = $params['perPage'];
-        }
+        $query['q'] = $params['q'];
 
 
         // api call
