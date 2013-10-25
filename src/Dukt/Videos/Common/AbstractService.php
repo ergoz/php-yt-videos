@@ -45,23 +45,6 @@ abstract class AbstractService implements ServiceInterface
 
     // --------------------------------------------------------------------
 
-    public function getVideos($path)
-    {
-        $sectionChild = false;
-
-        foreach($this->getSections() as $section) {
-            foreach($section['childs'] as $child) {
-                if($child['url'] == $path) {
-                    $sectionChild = $child;
-                }
-            }
-        }
-
-        return $this->{($sectionChild['method'])}($sectionChild);
-    }
-
-    // --------------------------------------------------------------------
-
     public function getName()
     {
         return $this->name;
