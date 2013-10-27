@@ -4,6 +4,8 @@ namespace Dukt\Videos\YouTube;
 
 use Dukt\Videos\Common\AbstractService;
 
+use Videos\Cache;
+
 class Service extends AbstractService
 {
     public $providerClass = "YouTube";
@@ -147,7 +149,16 @@ class Service extends AbstractService
             );
         }
 
-        $r = $this->apiCall('videos/'.$opts['id'], $query);
+
+
+        $r = Cache::get('video.'.$opts['id']);
+
+        if(!$r) {
+            $r = $this->apiCall('videos/'.$opts['id'], $query);
+
+            Cache::set('video.'.$opts['id'], $r);
+        }
+
 
         $video = new Video();
 

@@ -5,6 +5,7 @@ namespace Dukt\Videos\Vimeo;
 use Dukt\Vimeo;
 use Dukt\Videos\Common\AbstractService;
 
+use Videos\Cache;
 
 class Service extends AbstractService
 {
@@ -45,8 +46,13 @@ class Service extends AbstractService
 
         $video = new Video();
 
+        $r = Cache::get('video.'.$opts['id']);
 
-        $r = $api->call($method, $params);
+        if(!$r) {
+            $r = $api->call($method, $params);
+
+            Cache::set('video.'.$opts['id'], $r);
+        }
 
         $video->instantiate($r->video[0]);
 
