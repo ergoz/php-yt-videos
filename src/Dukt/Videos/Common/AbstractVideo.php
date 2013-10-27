@@ -112,11 +112,62 @@ abstract class AbstractVideo implements VideoInterface
         return $this->getEmbedHtml($options);
     }
 
-    public function getEmbedUrl()
+    public function getEmbedUrl($options = array())
     {
-        $url = sprintf($this->embedFormat, $this->id);
+        $boolParameters = array('disable_size', 'autoplay', 'loop');
 
-        return $url;
+        $boolParameters = array_merge($boolParameters, $this->boolParameters);
+
+        foreach($options as $k => $o) {
+            foreach($boolParameters as $k2) {
+                if($k == $k2) {
+                    if($o === 1 || $o === "1" || $o === true || $o === "yes") {
+                        $options[$k] = 1;
+                    }
+
+                    if($o === 0 || $o === "0" || $o === false || $o === "no") {
+                        $options[$k] = 0;
+                    }
+                }
+            }
+        }
+
+        $queryMark = '?';
+
+        if(strpos($this->embedFormat, "?") !== false) {
+            $queryMark = "&";
+        }
+
+        $extraParameters = "";
+
+        $disableSize = false;
+
+        if(isset($options['disable_size'])) {
+            $disableSize = $options['disable_size'];
+        }
+
+        if(!$disableSize)
+        {
+            if(isset($options['width'])) {
+                $width = $options['width'];
+                $extraParameters .= 'width="'.$width.'" ';
+                unset($options['width']);
+            }
+
+            if(isset($options['height'])) {
+                $height = $options['height'];
+                $extraParameters .= 'height="'.$height.'" ';
+                unset($options['height']);
+            }
+        }
+
+        $options = http_build_query($options);
+
+        $format = $this->embedFormat.$queryMark.$options;
+
+        $embed = sprintf($format, $this->id);
+
+        return $embed;
     }
 
     public function getEmbedHtml($options = array())

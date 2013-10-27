@@ -151,19 +151,17 @@ class Service extends AbstractService
 
 
 
-        $r = Cache::get('video.'.$opts['id']);
+        $video = Cache::get('video.'.$opts['id']);
 
-        if(!$r) {
+        if(!$video) {
             $r = $this->apiCall('videos/'.$opts['id'], $query);
 
-            Cache::set('video.'.$opts['id'], $r);
+            $video = new Video();
+
+            $video->instantiate($r);
+
+            Cache::set('video.'.$opts['id'], $video);
         }
-
-
-        $video = new Video();
-
-        $video->instantiate($r);
-
 
         return $video;
     }
