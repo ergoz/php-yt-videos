@@ -12,8 +12,7 @@ class Collection extends AbstractCollection
 
         $id = substr($id, strpos($id, "playlist:") + 9);
 
-        if(strpos($id, ":") !== false)
-        {
+        if(strpos($id, ":") !== false) {
             $id = substr($id, 0, strpos($id, ":"));
         }
 
@@ -24,13 +23,11 @@ class Collection extends AbstractCollection
         $this->totalVideos = (int) $yt->countHint;
 
         // url
-        
+
         $this->url = null;
 
-        foreach($response->link as $k => $v)
-        {
-            if($v['type'] == 'text/html')
-            {
+        foreach($response->link as $k => $v) {
+            if($v['type'] == 'text/html') {
                 $this->url = (string) $v['href'];
             }
         }
