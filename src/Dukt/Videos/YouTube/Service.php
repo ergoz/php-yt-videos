@@ -209,54 +209,51 @@ class Service extends AbstractService
             );
         }
 
-        if(!empty($params['q'])) {
-            $query['q'] = $params['q'];
-        }
-
         return $query;
     }
 
-    public function _getVideosRequest($uri, $params, $requireAuthentication = true)
+    public function getVideosSearch($params = array())
     {
-        if($requireAuthentication === true && !$this->provider) {
-            return NULL;
-        }
-
         $query = $this->_queryFromParams($params);
 
-        $r = $this->api('standardfeeds/most_popular', $query);
+        $query['q'] = $params['q'];
 
-        return $this->extractVideos($r);
-    }
-
-    public function getVideosExplore($params = array())
-    {
-        return $this->_getVideosRequest('standardfeeds/most_popular', $params);
+        return $this->_getVideosRequest('videos', $query);
     }
 
     public function getVideosFavorites($params = array())
     {
-        return $this->_getVideosRequest('users/default/favorites', $params);
+        $query = $this->_queryFromParams($params);
+
+        return $this->_getVideosRequest('users/default/favorites', $query);
+    }
+
+    public function getVideosUploads($params = array())
+    {
+        $query = $this->_queryFromParams($params);
+
+        return $this->_getVideosRequest('users/default/uploads', $query);
+    }
+
+    public function getVideosExplore($params = array())
+    {
+        $query = $this->_queryFromParams($params);
+
+        return $this->_getVideosRequest('standardfeeds/most_popular', $query);
     }
 
     public function getVideosHistory($params = array())
     {
+        $query = $this->_queryFromParams($params);
+
         return $this->_getVideosRequest('users/default/watch_history', $params, false);
     }
 
     public function getVideosPlaylist($params = array())
     {
-        return $this->_getVideosRequest('playlists/'.$params['id'], $params);
-    }
+        $query = $this->_queryFromParams($params);
 
-    public function getVideosUploads($params = array())
-    {
-        return $this->_getVideosRequest('users/default/uploads', $params);
-    }
-
-    public function getVideosSearch($params = array())
-    {
-        return $this->_getVideosRequest('videos', $params);
+        return $this->_getVideosRequest('playlists/'.$params['id'], $query);
     }
 
 
@@ -276,8 +273,6 @@ class Service extends AbstractService
         $r = $this->api('users/default/playlists', $query);
 
         return $this->extractCollections($r);
-
-        //return $r;
     }
 
 
@@ -349,6 +344,27 @@ class Service extends AbstractService
     {
         return true;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -6,7 +6,7 @@ use Dukt\Videos\Common\AbstractVideo;
 
 class Video extends AbstractVideo
 {
-    var $embedFormat =  "http://player.vimeo.com/video/%s";
+    var $embedFormat    =  "http://player.vimeo.com/video/%s";
     var $boolParameters = array('portrait', 'title', 'byline');
 
     public function instantiate($response)

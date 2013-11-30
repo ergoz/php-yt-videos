@@ -14,14 +14,21 @@ abstract class AbstractService implements ServiceInterface
 
     protected $parameters;
 
-    // --------------------------------------------------------------------
-
     public function __construct(Provider $provider = null)
     {
        $this->provider = $provider;
     }
 
-    // --------------------------------------------------------------------
+    public function _getVideosRequest($uri, $query, $requireAuthentication = true)
+    {
+        if($requireAuthentication === true && !$this->provider) {
+            return NULL;
+        }
+
+        $response = $this->api($uri, $query);
+
+        return $this->extractVideos($response);
+    }
 
     public function initialize($parameters = array())
     {
@@ -43,14 +50,12 @@ abstract class AbstractService implements ServiceInterface
         return $this;
     }
 
-    // --------------------------------------------------------------------
 
     public function getName()
     {
         return $this->name;
     }
 
-    // --------------------------------------------------------------------
 
     public function getDefaultParameters()
     {
@@ -69,21 +74,18 @@ abstract class AbstractService implements ServiceInterface
 
     }
 
-    // --------------------------------------------------------------------
 
     public function getParameters()
     {
         return $this->parameters->all();
     }
 
-    // --------------------------------------------------------------------
 
     protected function getParameter($key)
     {
         return $this->parameters->get($key);
     }
 
-    // --------------------------------------------------------------------
 
     protected function setParameter($key, $value)
     {
@@ -92,49 +94,42 @@ abstract class AbstractService implements ServiceInterface
         return $this;
     }
 
-    // --------------------------------------------------------------------
 
     public function getClientId()
     {
         return $this->getParameter('clientId');
     }
 
-    // --------------------------------------------------------------------
 
     public function setClientId($value)
     {
         return $this->setParameter('clientId', $value);
     }
 
-    // --------------------------------------------------------------------
 
     public function getClientSecret()
     {
         return $this->getParameter('clientSecret');
     }
 
-    // --------------------------------------------------------------------
 
     public function setClientSecret($value)
     {
         return $this->setParameter('clientSecret', $value);
     }
 
-    // --------------------------------------------------------------------
 
     public function getToken()
     {
         return $this->getParameter('token');
     }
 
-    // --------------------------------------------------------------------
 
     public function setToken($value)
     {
         return $this->setParameter('token', $value);
     }
 
-    // --------------------------------------------------------------------
 
     public function getUnserializedToken()
     {
@@ -158,7 +153,6 @@ abstract class AbstractService implements ServiceInterface
         return NULL;
     }
 
-    // --------------------------------------------------------------------
 
     public function isAuthenticated()
     {
@@ -176,7 +170,6 @@ abstract class AbstractService implements ServiceInterface
         }
     }
 
-    // --------------------------------------------------------------------
 
     public function requestParameters($method)
     {
@@ -205,7 +198,6 @@ abstract class AbstractService implements ServiceInterface
         return $array;
     }
 
-    // --------------------------------------------------------------------
 
     public function videoFromUrl($url)
     {
@@ -224,7 +216,6 @@ abstract class AbstractService implements ServiceInterface
         return $video;
     }
 
-    // --------------------------------------------------------------------
 
     public function getShortName()
     {
@@ -233,14 +224,12 @@ abstract class AbstractService implements ServiceInterface
         return $sn;
     }
 
-    // --------------------------------------------------------------------
 
     public function getProviderClass()
     {
         return $this->providerClass;
     }
 
-    // --------------------------------------------------------------------
 
     public function supports($method)
     {
