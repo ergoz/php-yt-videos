@@ -11,21 +11,17 @@ class Service extends AbstractService
     public $name          = "Vimeo";
     public $handle        = "vimeo";
 
-
-    /*****************
+    /**
     * Set Provider
-    ******************/
-
+    */
     public function setProvider(\OAuth\Provider\Vimeo $provider)
     {
         $this->provider = $provider;
     }
 
-
-    /*****************
+    /**
     * API
-    ******************/
-
+    */
     private function api()
     {
         $consumer_key = $this->provider->consumer->client_id;
@@ -40,22 +36,18 @@ class Service extends AbstractService
         return $vimeo;
     }
 
-
-    /*****************
+    /**
     * Get Video ID
-    ******************/
-
+    */
     public static function getVideoId($url)
     {
-
         // check if url works with this service and extract video_id
 
         $video_id = false;
 
         $regexp = array('/^https?:\/\/(www\.)?vimeo\.com\/([0-9]*)/', 2);
 
-        if(preg_match($regexp[0], $url, $matches, PREG_OFFSET_CAPTURE) > 0)
-        {
+        if(preg_match($regexp[0], $url, $matches, PREG_OFFSET_CAPTURE) > 0) {
 
             // regexp match key
 
@@ -69,8 +61,7 @@ class Service extends AbstractService
 
             // Fixes the youtube &feature_gdata bug
 
-            if(strpos($video_id, "&"))
-            {
+            if(strpos($video_id, "&")) {
                 $video_id = substr($video_id, 0, strpos($video_id, "&"));
             }
         }
@@ -80,11 +71,9 @@ class Service extends AbstractService
         return $video_id;
     }
 
-
-    /*****************
+    /**
     * Get Video
-    ******************/
-
+    */
     public function getVideo($id, $params = array())
     {
         // authentication required
@@ -108,15 +97,12 @@ class Service extends AbstractService
 
         $video->instantiate($r->video[0]);
 
-
         return $video;
     }
 
-
-    /*****************
+    /**
     * Get Videos
-    ******************/
-
+    */
     public function _queryFromParams($params = array())
     {
         $query = array();
@@ -177,13 +163,9 @@ class Service extends AbstractService
         return $this->_getVideosRequest('vimeo.albums.getVideos', $query);
     }
 
-
-
-    /*****************
+    /**
     * Get Collections
-    ******************/
-
-
+    */
     public function getCollectionsChannels($params = array())
     {
 
@@ -228,11 +210,9 @@ class Service extends AbstractService
         //return $r;
     }
 
-
-    /*****************
+    /**
     * Get UserInfos
-    ******************/
-
+    */
     public function getUserInfos()
     {
         if(!$this->provider) {
@@ -250,13 +230,9 @@ class Service extends AbstractService
         return $this->extractUserInfos($r);
     }
 
-
-    /*****************
+    /**
     * Extract Objects
-    ******************/
-
-
-
+    */
     private function extractVideos($r)
     {
         $responseVideos = $r->videos->video;
@@ -273,7 +249,6 @@ class Service extends AbstractService
 
         return $videos;
     }
-
 
     private function extractCollections($r, $type='album')
     {
@@ -297,7 +272,6 @@ class Service extends AbstractService
         return $collections;
     }
 
-
     private function extractUserInfos($r)
     {
         $response = $r->person;
@@ -308,11 +282,9 @@ class Service extends AbstractService
         return $userInfos;
     }
 
-
-    /*****************
+    /**
     * Supports
-    ******************/
-
+    */
     public function supportsRefresh()
     {
         return false;
@@ -321,205 +293,6 @@ class Service extends AbstractService
     public function supportsOwnVideoLike()
     {
         return false;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*****************
-    * Favorites
-    ******************/
-
-    /**
-     * Add favorite
-     *
-     * @access  public
-     * @param   string
-     * @return  void
-     */
-    public function favoriteAdd($params)
-    {
-        // authentication required
-
-        if(!$this->provider) {
-            return NULL;
-        }
-
-        $api = $this->api();
-
-        $method = 'vimeo.videos.setLike';
-
-        $params['video_id'] = $params['id'];
-        $params['like'] = 1;
-
-        $r = $api->call($method, $params);
-    }
-
-    /**
-     * Remove favorite
-     *
-     * @access  public
-     * @param   string
-     * @return  void
-     */
-    public function favoriteRemove($params)
-    {
-        // authentication required
-
-        if(!$this->provider) {
-            return NULL;
-        }
-
-        $api = $this->api();
-
-        $method = 'vimeo.videos.setLike';
-
-        $params['video_id'] = $params['id'];
-        $params['like'] = 0;
-
-        $r = $api->call($method, $params);
-    }
-
-
-    function isFavorite($params)
-    {
-        // authentication required
-
-        if(!$this->provider) {
-            return NULL;
-        }
-
-        $api = $this->api();
-
-        $method = 'vimeo.videos.getInfo';
-
-        $params['video_id'] = $params['id'];
-
-        $r = $api->call($method, $params);
-
-        if (isset($r->video[0]->is_like)) {
-            if ($r->video[0]->is_like == 1) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    /*****************
-    * Playlists
-    ******************/
-
-    public function playlistCreate($params = array())
-    {
-        // authentication required
-
-        if(!$this->provider) {
-            return NULL;
-        }
-
-        $api = $this->api();
-
-        $method = 'vimeo.albums.create';
-
-        $query = array();
-        $query['title'] = $params['title'];
-        $query['description'] = $params['description'];
-        $query['video_id'] = $params['videoId'];
-
-        $r = $api->call($method, $query);
-
-        return $r;
-    }
-
-    public function playlistDelete($params = array())
-    {
-        // authentication required
-
-        if(!$this->provider) {
-            return NULL;
-        }
-
-        $api = $this->api();
-
-        $method = 'vimeo.albums.delete';
-
-        $query = array();
-        $query['album_id'] = $params['id'];
-
-        $r = $api->call($method, $query);
-
-        return $r;
-    }
-
-    public function playlistAddVideo($params = array())
-    {
-        // authentication required
-
-        if(!$this->provider) {
-            return NULL;
-        }
-
-        $api = $this->api();
-
-        $method = 'vimeo.albums.addVideo';
-
-        $query = array();
-        $query['album_id'] = $params['collectionId'];
-        $query['video_id'] = $params['videoId'];
-
-        $r = $api->call($method, $query);
-
-        return $r;
-    }
-
-    public function playlistRemoveVideo($params = array())
-    {
-        // authentication required
-
-        if(!$this->provider) {
-            return NULL;
-        }
-
-        $api = $this->api();
-
-        $method = 'vimeo.albums.removeVideo';
-
-        $query = array();
-        $query['album_id'] = $params['collectionId'];
-        $query['video_id'] = $params['videoId'];
-
-        $r = $api->call($method, $query);
-
-        return $r;
     }
 }
 

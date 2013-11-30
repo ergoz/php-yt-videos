@@ -11,7 +11,6 @@ class Video extends AbstractVideo
 
     public function instantiate($response)
     {
-        // var_dump($response);
         // basics
 
         $this->id              = $response->id;
@@ -26,6 +25,7 @@ class Video extends AbstractVideo
         $this->duration        = $this->getDuration("%m:%s");
         $this->title           = $response->title;
         $this->description     = $response->description;
+
 
         // author
 
@@ -42,11 +42,12 @@ class Video extends AbstractVideo
 
         $this->thumbnails = array();
 
-        foreach($response->thumbnails->thumbnail as $k => $thumbnail)
-        {
+        foreach($response->thumbnails->thumbnail as $k => $thumbnail) {
             array_push($this->thumbnails, $thumbnail->_content);
         }
 
+
+        // embeds
 
         $this->embedUrl = $this->getEmbedUrl();
         $this->embedHtml = $this->getEmbedHtml();

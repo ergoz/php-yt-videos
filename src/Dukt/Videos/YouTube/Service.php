@@ -10,11 +10,9 @@ class Service extends AbstractService
     public $name          = "YouTube";
     public $handle        = "youtube";
 
-
-    /*****************
-    * Parameters
-    ******************/
-
+    /**
+     * Parameters
+     */
     public function getDefaultParameters()
     {
         $parentSettings = parent::getDefaultParameters();
@@ -40,21 +38,17 @@ class Service extends AbstractService
         return $this->setParameter('developerKey', $value);
     }
 
-
-    /*****************
-    * Set Provider
-    ******************/
-
+    /**
+     * Set Provider
+     */
     public function setProvider(\OAuth\Provider\YouTube $provider)
     {
         $this->provider = $provider;
     }
 
-
-    /*****************
+    /**
     * API
-    ******************/
-
+    */
     private function api($url, $params = array(), $method='get')
     {
         $developerKey = $this->getDeveloperKey();
@@ -118,11 +112,9 @@ class Service extends AbstractService
         return true;
     }
 
-
-    /*****************
+    /**
     * Get Video ID
-    ******************/
-
+    */
     public static function getVideoId($url)
     {
         // check if url works with this service and extract video_id
@@ -133,8 +125,7 @@ class Service extends AbstractService
 
 
 
-        if(preg_match($regexp[0], $url, $matches, PREG_OFFSET_CAPTURE) > 0)
-        {
+        if(preg_match($regexp[0], $url, $matches, PREG_OFFSET_CAPTURE) > 0) {
 
             // regexp match key
 
@@ -148,8 +139,7 @@ class Service extends AbstractService
 
             // Fixes the youtube &feature_gdata bug
 
-            if(strpos($video_id, "&"))
-            {
+            if(strpos($video_id, "&")) {
                 $video_id = substr($video_id, 0, strpos($video_id, "&"));
             }
         }
@@ -159,14 +149,11 @@ class Service extends AbstractService
         return $video_id;
     }
 
-
-    /*****************
+    /**
     * Get Video
-    ******************/
-
+    */
     public function getVideo($id, $params = array())
     {
-
         if(!$this->provider) {
             return NULL;
         }
@@ -186,11 +173,9 @@ class Service extends AbstractService
         return $video;
     }
 
-
-    /*****************
+    /**
     * Get Videos
-    ******************/
-
+    */
     public function _queryFromParams($params = array())
     {
         $query = array();
@@ -198,8 +183,7 @@ class Service extends AbstractService
         if(isset($params['page']) && isset($params['perPage'])) {
             $startIndex = $params['page'];
 
-            if($startIndex > 1)
-            {
+            if($startIndex > 1) {
                 $startIndex = (($params['page'] - 1) * $params['perPage']) + 1;
             }
 
@@ -256,11 +240,9 @@ class Service extends AbstractService
         return $this->_getVideosRequest('playlists/'.$params['id'], $query);
     }
 
-
-    /*****************
+    /**
     * Get Collections
-    ******************/
-
+    */
     public function getCollectionsPlaylists($params = array())
     {
 
@@ -275,11 +257,9 @@ class Service extends AbstractService
         return $this->extractCollections($r);
     }
 
-
-    /*****************
+    /**
     * Get UserInfos
-    ******************/
-
+    */
     public function getUserInfos()
     {
         if(!$this->provider) {
@@ -297,11 +277,9 @@ class Service extends AbstractService
         return new UserInfos($response);
     }
 
-
-    /*****************
+    /**
     * Extract Objects
-    ******************/
-
+    */
     private function extractVideos($r)
     {
         $videos = array();
@@ -330,11 +308,9 @@ class Service extends AbstractService
         return $collections;
     }
 
-
-    /*****************
+    /**
     * Supports
-    ******************/
-
+    */
     public function supportsRefresh()
     {
         return true;
@@ -343,184 +319,5 @@ class Service extends AbstractService
     public function supportsOwnVideoLike()
     {
         return true;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /*****************
-    * Favorites
-    ******************/
-
-    /**
-     * Add favorite
-     *
-     * @access  public
-     * @param   string
-     * @return  void
-     */
-    function favoriteAdd($params)
-    {
-
-        if(!$this->provider) {
-            return NULL;
-        }
-
-        $query = '<?xml version="1.0" encoding="UTF-8"?><entry xmlns="http://www.w3.org/2005/Atom"><id>'.$params['id'].'</id></entry>';
-
-
-        $r = $this->api('users/default/favorites', $query, 'post');
-    }
-
-
-    /**
-     * Remove favorite
-     *
-     * @access  public
-     * @param   string
-     * @return  void
-     */
-    function favoriteRemove($params)
-    {
-
-        if(!$this->provider) {
-            return NULL;
-        }
-
-        // get favorites
-
-        $r = $this->api('users/default/favorites');
-
-        foreach($r->entry as $v)
-        {
-            $video = new Video();
-            $video->instantiate($v);
-
-            if($video->id == $params['id']) {
-                // favorite found, let's remove it
-
-                $yt = $v->children('http://gdata.youtube.com/schemas/2007');
-
-                $favorite_id = (string) $yt->favoriteId;
-
-                $query = '';
-
-                $r = $this->api('users/default/favorites/'.$favorite_id, $query, 'delete');
-
-            }
-        }
-    }
-
-
-
-    function isFavorite($params)
-    {
-        $videos = $this->favorites($params);
-
-        if(!$videos) {
-            return false;
-        }
-
-        foreach($videos as $v) {
-            if($v->id == $params['id']) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    /*****************
-    * Playlists
-    ******************/
-
-    public function playlistCreate($params = array())
-    {
-        if(!$this->provider) {
-            return NULL;
-        }
-
-        $query = '<?xml version="1.0" encoding="UTF-8"?>
-<entry xmlns="http://www.w3.org/2005/Atom"
-    xmlns:yt="http://gdata.youtube.com/schemas/2007">
-  <title type="text">'.$params['title'].'</title>
-  <summary>'.$params['description'].'</summary>
-</entry>';
-
-
-        $r = $this->api('users/default/playlists', $query, 'post');
-    }
-
-    public function playlistDelete($params = array())
-    {
-        if(!$this->provider) {
-            return NULL;
-        }
-
-        $query = array();
-
-        $r = $this->api('users/default/playlists/'.$params['id'], $query, 'delete');
-
-        return $r;
-    }
-
-    public function playlistAddVideo($params = array())
-    {
-        if(!$this->provider) {
-            return NULL;
-        }
-
-        $query = '<?xml version="1.0" encoding="UTF-8"?>
-<entry xmlns="http://www.w3.org/2005/Atom"
-    xmlns:yt="http://gdata.youtube.com/schemas/2007">
-  <id>'.$params['videoId'].'</id>
-  <yt:position>1</yt:position>
-</entry>';
-
-        $r = $this->api('playlists/'.$params['collectionId'], $query, 'post');
-
-        return $r;
-    }
-
-    public function playlistRemoveVideo($params = array())
-    {
-        if(!$this->provider) {
-            return NULL;
-        }
-
-        $query = array();
-
-        $r = $this->api('playlists/'.$params['collectionId'].'/'.$params['collectionEntryId'], $query, 'delete');
-
-        return $r;
     }
 }
