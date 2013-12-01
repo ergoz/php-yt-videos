@@ -85,20 +85,16 @@ class Service extends AbstractService
             return NULL;
         }
 
-        $api = $this->api();
-
         $method = 'vimeo.videos.getInfo';
 
         $params = array();
-        $params['video_id'] = $opts['id'];
+        $params['video_id'] = $id;
+
+        $response = $this->api($method, $params);
 
         $video = new Video();
 
-        if(!$r) {
-            $r = $api->call($method, $params);
-        }
-
-        $video->instantiate($r->video[0]);
+        $video->instantiate($response->video[0]);
 
         return $video;
     }
