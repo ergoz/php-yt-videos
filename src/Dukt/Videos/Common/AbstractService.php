@@ -14,7 +14,7 @@ abstract class AbstractService implements ServiceInterface
 
     protected $parameters;
 
-    public function __construct(Provider $provider = null)
+    public function __construct($provider = null)
     {
        $this->provider = $provider;
     }
@@ -28,6 +28,15 @@ abstract class AbstractService implements ServiceInterface
         $response = $this->api($uri, $query);
 
         return $this->extractVideos($response);
+    }
+
+    public function getVideos($uri, $params)
+    {
+        $segments = explode("/", $uri);
+
+        $method = 'getVideos'.ucwords($segments[0]);
+
+        return $this->{$method}($params);
     }
 
     public function initialize($parameters = array())
@@ -78,6 +87,11 @@ abstract class AbstractService implements ServiceInterface
     public function getParameters()
     {
         return $this->parameters->all();
+    }
+
+    public function setParameters($parameters)
+    {
+        return $this->parameters->add($parameters);
     }
 
 

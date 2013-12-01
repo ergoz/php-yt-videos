@@ -7,10 +7,10 @@ namespace Dukt\Videos\Common;
  */
 interface ServiceInterface
 {
-    public function userInfos();
-    public static function getVideoId($url);
-    public function video($options);
+    // public function userInfos();
+    // public static function getVideoId($url);
+    // public function video($options);
 
     // public function connect($lib, $app);
-    // public function connect_callback($lib, $app);   
+    // public function connect_callback($lib, $app);
 }

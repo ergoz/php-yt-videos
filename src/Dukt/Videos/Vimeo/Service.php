@@ -22,7 +22,7 @@ class Service extends AbstractService
     /**
     * API
     */
-    private function api()
+    protected function api($method, $params)
     {
         $consumer_key = $this->provider->consumer->client_id;
         $consumer_secret = $this->provider->consumer->secret;
@@ -31,9 +31,12 @@ class Service extends AbstractService
         $token_secret = $this->provider->token->secret;
 
         $vimeo = new Vimeo($consumer_key, $consumer_secret);
+
         $vimeo->setToken($token, $token_secret);
 
-        return $vimeo;
+        $r = $vimeo->call($method, $params);
+
+        return $r;
     }
 
     /**
@@ -233,7 +236,7 @@ class Service extends AbstractService
     /**
     * Extract Objects
     */
-    private function extractVideos($r)
+    protected function extractVideos($r)
     {
         $responseVideos = $r->videos->video;
 
@@ -250,7 +253,7 @@ class Service extends AbstractService
         return $videos;
     }
 
-    private function extractCollections($r, $type='album')
+    protected function extractCollections($r, $type='album')
     {
         $responseCollections = $r;
 
@@ -272,7 +275,7 @@ class Service extends AbstractService
         return $collections;
     }
 
-    private function extractUserInfos($r)
+    protected function extractUserInfos($r)
     {
         $response = $r->person;
 

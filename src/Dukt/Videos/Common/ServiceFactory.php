@@ -7,7 +7,7 @@ use Symfony\Component\Finder\Finder;
 
 class ServiceFactory
 {
-    public static function create($class, Provider $provider = null)
+    public static function create($class, $provider = null)
     {
         $class = Helper::getServiceClassName($class);
 
@@ -16,6 +16,8 @@ class ServiceFactory
         }
 
         $service = new $class($provider);
+
+        $service->initialize();
 
         return $service;
     }

@@ -49,7 +49,7 @@ class Service extends AbstractService
     /**
     * API
     */
-    private function api($url, $params = array(), $method='get')
+    protected function api($url, $params = array(), $method='get')
     {
         $developerKey = $this->getDeveloperKey();
 
@@ -89,14 +89,10 @@ class Service extends AbstractService
 
         curl_close ($curl);
 
+        if($curlInfo['http_code'] !== 200) {
+            $error = trim(strip_tags($result));
 
-        if($curlInfo['http_code'] == 401 && strpos($result, "Token invalid") !== false) {
-            // refresh token
-            // $providerParams = array('grant_type' => 'refresh_token');
-            // $code = $provider
-            // $this->provider->access($code, $providerParams);
-            // var_dump($this->provider);
-            throw new \Exception('Provider Invalid Token');
+            throw new \Exception($error);
         }
 
         if($method != 'delete') {
@@ -280,11 +276,12 @@ class Service extends AbstractService
     /**
     * Extract Objects
     */
-    private function extractVideos($r)
+    protected function extractVideos($r)
     {
         $videos = array();
 
         foreach($r->entry as $v) {
+
             $video = new Video();
             $video->instantiate($v);
 
@@ -294,7 +291,7 @@ class Service extends AbstractService
         return $videos;
     }
 
-    private function extractCollections($r)
+    protected function extractCollections($r)
     {
         $collections = array();
 
