@@ -165,29 +165,6 @@ class Service extends AbstractService
     /**
     * Get Collections
     */
-    public function getCollectionsChannels($params = array())
-    {
-
-        // authentication required
-
-        if(!$this->provider) {
-            return NULL;
-        }
-
-        $api = $this->api();
-
-        $method = 'vimeo.channels.getAll';
-
-        $query = $this->_queryFromParams($params);
-
-        $r = $api->call($method, $query);
-
-
-        $collections = $this->extractCollections($r->channels->channel, 'channel');
-
-        return $collections;
-    }
-
     public function getCollectionsAlbums($params = array())
     {
 
@@ -197,16 +174,33 @@ class Service extends AbstractService
             return NULL;
         }
 
-        $api = $this->api();
-
         $method = 'vimeo.albums.getAll';
 
         $query = $this->_queryFromParams();
 
-        $r = $api->call($method, $query);
+        $response = $this->api($method, $query);
 
-        return $this->extractCollections($r->albums->album, 'album');
-        //return $r;
+        return $this->extractCollections($response->albums->album, 'album');
+    }
+
+    public function getCollectionsChannels($params = array())
+    {
+
+        // authentication required
+
+        if(!$this->provider) {
+            return NULL;
+        }
+
+        $method = 'vimeo.channels.getAll';
+
+        $query = $this->_queryFromParams($params);
+
+        $response = $this->api($method, $query);
+
+        $collections = $this->extractCollections($response->channels->channel, 'channel');
+
+        return $collections;
     }
 
     /**
